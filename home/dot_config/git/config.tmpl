@@ -41,8 +41,6 @@
 [alias]
   hash = rev-parse --short HEAD
   root = rev-parse --show-toplevel
-  url = !(git remote get-url origin | sed 's/:/\\//' | sed 's/.*@/https:\\/\\//' | sed 's/.git$//')
-  web = !(open `git url`)
 
   draft = push -o merge_request.create -o merge_request.draft
   mr    = push -o merge_request.create

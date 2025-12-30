@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+origin=$(git remote get-url origin)
+
+if [[ $origin == git@* ]]; then
+    origin=${origin#git@}
+    origin=${origin/:/\//}
+    origin="https://$origin"
+else
+    origin=${origin%.git}
+    origin=${origin/git:\/\//https:\/\/}
+fi
+
+# Open in default web browser
+echo "Opening $origin"
+open "$origin"
