@@ -25,10 +25,12 @@ fi
 
 # eza is a better ls
 if command -v eza >/dev/null 2>&1; then
-  alias l='eza -a -s type'
-  alias ls='eza -a -s type'
-  alias ll='eza -la --git-repos -s type'
-  alias tree='eza -lT --hyperlink'
+  ezargs="--ignore-glob='$(awk '{$1=$1} NF{printf "%s|", $0}' "${HOME}/.config/eza/ignore" | sed 's/|$//')' --group-directories-first"
+
+  alias l="eza -a -s type $ezargs"
+  alias ls="eza -a -s type $ezargs"
+  alias ll="eza -la --git-repos -s type $ezargs"
+  alias tree="eza -lT --hyperlink $ezargs"
 fi
 
 if command -v starship >/dev/null 2>&1; then
