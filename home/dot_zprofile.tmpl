@@ -1,9 +1,12 @@
 # vim:fileencoding=utf-8:filetype=sh:foldmethod=marker
 
-export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
-export XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
-export XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
-export XDG_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
+export XDG_CONFIG_HOME="${HOME}/.config"
+export XDG_CACHE_HOME="${HOME}/.cache"
+export XDG_DATA_HOME="${HOME}/.local/share"
+export XDG_STATE_HOME="${HOME}/.local/state"
+
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
 
 # Homebrew environment variables
 export HOMEBREW_PREFIX="/opt/homebrew"
@@ -43,9 +46,6 @@ if command -v fzf >/dev/null; then
     export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {}'"
   fi
 fi
-
-# export LANG=en_US.UTF-8
-# export LC_ALL=en_US.UTF-8
 
 export GPG_TTY=$(tty)
 
