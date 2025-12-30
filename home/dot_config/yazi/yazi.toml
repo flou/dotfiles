@@ -1,2 +1,5 @@
 [mgr]
+linemode = "permissions"
+ratio = [1,4,4]
 show_hidden = true
+sort_dir_first = true
