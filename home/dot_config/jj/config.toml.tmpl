@@ -1,0 +1,74 @@
+[user]
+name = {{ .my.name | quote }}
+email = {{ .my.email | quote }}
+
+[ui]
+paginate = "never"
+default-command = "log"
+diff-formatter = "git"
+diff-editor = ":builtin"
+
+[aliases]
+lg = ["log"]
+b = ["bookmark"]
+n = ["new"]
+ds = ["describe"]
+s = ["status"]
+sl = [
+  "log",
+  "-r",
+  "trunk():: ~ (remote_bookmarks() ~ bookmarks()) | (@..bookmarks())",
+  "--no-pager",
+  "--reversed",
+]
+sync = ['git', 'fetch', '--all-remotes']
+push = ['git', 'push', '-c', '@-']
+evolve = ['rebase', '--skip-emptied', '-d', 'main']
+tug = ["bookmark", "move", "--from", "heads(::@- & bookmarks())", "--to", "@-"]
+
+[colors]
+"commit_id prefix" = { bold = true }
+"diff removed token" = { underline = false }
+"diff added token" = { underline = false }
+
+[templates]
+draft_commit_description = '''
+concat(
+  coalesce(description, "\n"),
+  surround(
+    "\nJJ: This commit contains the following changes:\n", "",
+    indent("JJ:     ", diff.summary()),
+  ),
+  surround(
+    "\nJJ: This commit contains the following changes:\n", "",
+    indent("JJ:     ", diff.stat(72)),
+  ),
+  "\n",
+  "JJ: ignore-rest\n",
+  diff.git(),
+)
+'''
+
+[template-aliases]
+"format_timestamp(timestamp)" = "timestamp.ago()"
+'format_short_id(id)' = 'id.shortest(5)'
+
+[revsets]
+log = "present(@) | ancestors(immutable_heads().., 5) | present(trunk())"
+
+{{- if .work }}
+[[--scope]]
+--when.repositories = ["~/workspace/{{ .my.work_git_forge }}"]
+[--scope.user]
+email = {{ .my.work_email | quote }}
+
+[signing]
+behavior = "own"
+backend = "ssh"
+backends.ssh.program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+backends.ssh.allowed-signers = "{{ .chezmoi.homeDir }}/.ssh/allowed_signers"
+key = {{ (onepasswordDetailsFields "y36tqmojyxoqugz6gwyqxpmwbm").public_key.value | quote }}
+
+[git]
+push-bookmark-prefix = "lou/push-"
+{{- end }}

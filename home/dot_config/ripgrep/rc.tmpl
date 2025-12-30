@@ -1,0 +1,20 @@
+# config
+--hidden
+--smart-case
+--no-line-number
+--follow
+--no-heading
+--max-columns=150
+--max-columns-preview
+
+# add custom types
+--type-add
+frontend:*.{html,css,js,jsx,ts,tsx,scss,sass,html.heex}*
+--type-add
+fe:*.{html,css,js,jsx,ts,tsx,scss,sass,html.heex}*
+--type-add
+heex:*.html.heex
+
+--ignore-file={{ .chezmoi.homeDir }}/.config/ripgrep/ignore
+
+# vim:ft=conf

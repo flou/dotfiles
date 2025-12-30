@@ -1,0 +1,15 @@
+.yarn
+.git
+node_modules
+_build
+.Trash
+.cache
+.licenses
+.hg
+.svn
+.sass-cache
+deps
+tags
+.elixir_ls
+tmp
+coverage

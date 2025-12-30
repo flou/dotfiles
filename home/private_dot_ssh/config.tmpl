@@ -1,0 +1,14 @@
+# vim:fileencoding=utf-8:filetype=sshconfig:foldmethod=marker
+
+Host *
+    IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+
+{{- if not .work }}
+Host github.com
+    User git
+    IdentityFile ~/.ssh/github
+{{- end }}
+
+{{- if .work }}
+Include ~/.ssh/config.work
+{{- end }}

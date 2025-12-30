@@ -1,0 +1,60 @@
+#!/bin/bash
+
+set -eufo pipefail
+
+{{ $brews := list
+    "bash"
+    "bat"
+    "btop"
+    "cargo-binstall"
+    "chezmoi"
+    "curlie"
+    "difftastic"
+    "direnv"
+    "eza"
+    "fd"
+    "fzf"
+    "ghorg"
+    "git"
+    "git-delta"
+    "gnu-sed"
+    "helix"
+    "jj"
+    "jless"
+    "lazygit"
+    "mise"
+    "moor"
+    "moreutils"
+    "px"
+    "ripgrep"
+    "starship"
+    "usage"
+    "vivid"
+    "xh"
+    "yazi"
+    "zoxide"
+    "zsh"
+-}}
+
+{{ $casks := (list
+    "1password-cli"
+) -}}
+
+{{ if .work -}}
+{{ $brews = concat $brews (list
+    "colima"
+    "viddy"
+) -}}
+
+{{ $casks = concat $casks (list) -}}
+{{ end -}}
+
+brew bundle --file=/dev/stdin <<EOF
+{{ range ($brews | sortAlpha | uniq) -}}
+brew "{{ . }}"
+{{ end -}}
+
+{{ range ($casks | sortAlpha | uniq) -}}
+cask "{{ . }}"
+{{ end -}}
+EOF

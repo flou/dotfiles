@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+import random
+import string
+
+available_chars = string.ascii_letters + string.digits
+blocks = 3
+block_length = 8
+
+print(
+    "-".join(
+        ["".join(random.sample(available_chars, block_length)) for _ in range(blocks)]
+    )
+)

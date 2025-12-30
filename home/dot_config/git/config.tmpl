@@ -1,0 +1,157 @@
+[user]
+  name = {{ .my.name | quote }}
+  email = {{ .my.email | quote }}
+[github]
+  user = flou
+
+[init]
+  defaultBranch = main
+[core]
+  autocrlf = false
+  fileMode = true
+  editor = nvim
+  whitespace = -trailing
+[credential]
+  helper = osxkeychain
+[commit]
+  verbose = true
+[color]
+  ui = auto
+[color "branch"]
+  current = yellow reverse
+  local   = yellow
+  remote  = green
+[color "diff-highlight"]
+  oldNormal = red bold
+  oldHighlight = red bold 52
+  newNormal = green bold
+  newHighlight = green bold 22
+[color "diff"]
+  meta = yellow
+  frag = magenta bold
+  commit = yellow bold
+  old = red bold
+  new = green bold
+  whitespace = red reverse
+[color "status"]
+  added      = yellow
+  changed    = green
+  untracked  = cyan
+
+[alias]
+  hash = rev-parse --short HEAD
+  root = rev-parse --show-toplevel
+  url = !(git remote get-url origin | sed 's/:/\\//' | sed 's/.*@/https:\\/\\//' | sed 's/.git$//')
+  web = !(open `git url`)
+
+  draft = push -o merge_request.create -o merge_request.draft
+  mr    = push -o merge_request.create
+
+  set-upstream = !(git branch --set-upstream-to=origin/`git symbolic-ref --short HEAD`)
+  default = !(git symbolic-ref refs/remotes/origin/HEAD | xargs basename)
+  sd = !(git switch `git default`)
+
+  r       = remote -v      # show remotes (verbose)
+
+  br       = branch
+  branches = branch -av    # show all branches
+  bb       = for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
+
+  ci    = commit
+  oops  = commit --amend -C HEAD
+
+  co = checkout            # checkout
+  nb = switch -c           # create and switch to a new branch (mnemonic: "git new branch branchname...")
+  cp = cherry-pick -x      # grab a change from a branch
+  nbc = "!f() { git nb $1 && git commit -am \"$2\"; }; f" # create a new branch and commit
+
+  ls = ls-files
+
+  d   = diff               # diff unstaged changes
+  dc  = diff --cached      # diff staged changes
+  dfu = diff @{u}
+
+  lg        = log --graph --topo-order --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %Cgreen(%cd)%Creset %C(cyan)[%an]%Creset'
+
+  unstage  = reset HEAD    # remove files from index (tracking)
+  undo     = reset --soft "HEAD^"
+  filelog  = log -u        # show changes to a file
+
+  st = status              # status
+
+  tags = tag -n            # show tags with <n> lines of each tag message
+
+  ready  = rebase -i @{u}
+  sortag = "!(git for-each-ref --sort=taggerdate --format '%(refname) %(taggerdate)' refs/tags)"
+  up     = pull --rebase --autostash
+
+  gone = "!(git for-each-ref refs/heads/ --format '%(refname:short) %(upstream:track)' | awk '$2 == \"[gone]\" {print $1}' | xargs -r git branch -d)"
+[column]
+  ui = auto
+[branch]
+  sort = -committerdate
+[pull]
+  rebase = true
+[rebase]
+  autoStash = true
+  autosquash = true
+  updateRefs = true
+[push]
+  default = tracking
+  followTags = false
+  autoSetupRemote = true
+[fetch]
+  all = true
+  prune = true
+  pruneTags = true
+[blame]
+  date = short
+[log]
+  date = human
+  color = always
+[merge]
+  verbosity = 1
+  ff = only
+  tool = smerge
+  conflictstyle = zdiff3
+[diff]
+  mnemonicPrefix = true
+  algorithm = histogram
+  renames = true
+  submodule = log
+  tool = smerge
+  conflictstyle = zdiff3
+  colorMoved = true
+[rerere]
+  enabled = true
+  autoupdate = true
+[status]
+  showUntrackedFiles = all
+  relativePaths = true
+  submoduleSummary = true
+[grep]
+  extendedRegexp = true
+[advice]
+  statusHints = true
+[pager]
+  diff = delta
+  show = delta
+  log = delta
+[interactive]
+  diffFilter = delta --color-only
+[tag]
+  sort = version:refname
+[tig]
+  main-view-author-display = email-user
+  main-view-id-display = yes
+  main-view-commit-title-overflow = 55
+  reference-format = hide:other
+[delta]
+  navigate = true  # use n and N to move between diff sections
+  dark = true      # or light = true, or omit for auto-detection
+  zero-style = dim syntax
+
+{{- if .work }}
+[includeIf "gitdir:~/workspace/{{ .my.work_git_forge }}/"]
+  path = config.work
+{{- end }}

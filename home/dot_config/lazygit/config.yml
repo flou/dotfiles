@@ -1,0 +1,37 @@
+confirmOnQuit: false
+quitOnTopLevelReturn: false
+disableStartupPopups: true
+notARepository: "skip"
+promptToReturnFromSubprocess: false
+gui:
+  # stuff relating to the UI
+  scrollHeight: 4 # how many lines you scroll by
+  scrollPastBottom: false # enable scrolling past the bottom
+  commitLength:
+    show: true
+  mouseEvents: true
+  nerdFontsVersion: "3"
+  skipDiscardChangeWarning: true
+  showFileTree: true
+  showCommandLog: false
+  showBottomLine: false
+  theme:
+    selectedLineBgColor:
+      - "#413660"
+      # selectedRangeBgColor:
+      #   - '#413660'
+refresher:
+  refreshInterval: 60
+git:
+  autoFetch: true
+  pagers:
+    - colorArg: always
+      pager: delta --dark --paging=never
+update:
+  method: never
+customCommands:
+  - key: "#"
+    description: "Push and create Merge Request"
+    context: "global"
+    loadingText: "Push and create Merge Request ..."
+    command: git mr && glab mr view --web

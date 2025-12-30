@@ -1,0 +1,73 @@
+# vim:fileencoding=utf-8:filetype=sh:foldmethod=marker
+
+# Homebrew environment variables
+export HOMEBREW_PREFIX="/opt/homebrew"
+export HOMEBREW_REPOSITORY="/opt/homebrew"
+export HOMEBREW_CELLAR="${HOMEBREW_REPOSITORY}/Cellar"
+export MANPATH="${HOMEBREW_REPOSITORY}/share/man${MANPATH+:$MANPATH}:"
+export INFOPATH="${HOMEBREW_REPOSITORY}/share/info:${INFOPATH:-}"
+export HOMEBREW_NO_ANALYTICS=1
+
+export BROWSER="open"
+export EDITOR="nvim"
+export VISUAL="nvim"
+
+export GHQ_ROOT="{{ .my.workspace }}"
+export GOPATH="${HOME}/go"
+export QMK_HOME="{{ .my.workspace }}/github.com/qmk/qmk_firmware"
+
+export RIPGREP_CONFIG_PATH="${HOME}/.config/ripgrep/rc"
+export LESSHISTFILE=~/.local/state/lesshst
+
+export SHELL_SESSIONS_DISABLE=1 # Make Apple Terminal behave.
+
+# Python: Don't write .pyc files
+export PYTHONDONTWRITEBYTECODE=1
+
+# FZF options
+if command -v fzf >/dev/null; then
+  export FZF_DEFAULT_OPTS="--bind alt-up:preview-page-up --bind alt-down:preview-page-down --bind 'ctrl-o:execute-silent(code {})+abort'"
+
+  if command -v fd >/dev/null; then
+    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git --exclude .DS_Store --strip-cwd-prefix'
+    export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git --exclude .DS_Store --strip-cwd-prefix'
+    export FZF_CTRL_T_COMMAND='fd --type f --type d --hidden --follow --exclude .git --exclude .DS_Store --strip-cwd-prefix'
+  fi
+
+  if command -v bat >/dev/null 2>&1; then
+    export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {}'"
+  fi
+fi
+
+# export LANG=en_US.UTF-8
+# export LC_ALL=en_US.UTF-8
+
+export GPG_TTY=$(tty)
+
+#
+# Paths
+#
+
+# typeset and export args:
+# -T: bind with a shell path variable
+# -U: ensure that entries are unique
+typeset -gU fpath path cdpath
+
+path=(
+  $HOME/.cargo/bin
+  $GOPATH/bin
+  $HOME/.local/bin
+  $HOME/.krew/bin
+  '/Applications/Ghostty.app/Contents/MacOS'
+  $HOMEBREW_REPOSITORY/opt/coreutils/libexec/gnubin
+  $HOMEBREW_REPOSITORY/{,s}bin
+  /usr/local/{bin,sbin}
+  $path
+)
+
+fpath=(
+  $HOMEBREW_REPOSITORY/share/zsh/site-functions
+  /Applications/Ghostty.app/Contents/Resources/zsh/site-functions
+  ~/.zfunc
+  $fpath
+)

@@ -1,0 +1,184 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = "$username$hostname$localip$shlvl$directory$git_branch$helm$python$terraform$zig$nix_shell$aws$gcloud$direnv$kubernetes$sudo$cmd_duration$line_break$jobs$battery$status$shell$character"
+
+[singularity]
+disabled = true
+[nats]
+disabled = true
+[vcsh]
+disabled = true
+[fossil_branch]
+disabled = true
+[fossil_metrics]
+disabled = true
+[git_commit]
+disabled = true
+[git_state]
+disabled = true
+[git_metrics]
+disabled = true
+[hg_branch]
+disabled = true
+[pijul_channel]
+disabled = true
+[package]
+disabled = true
+[buf]
+disabled = true
+[cobol]
+disabled = true
+[daml]
+disabled = true
+[dart]
+disabled = true
+[dotnet]
+disabled = true
+[fennel]
+disabled = true
+[gradle]
+disabled = true
+[haskell]
+disabled = true
+[haxe]
+disabled = true
+[julia]
+disabled = true
+[kotlin]
+disabled = true
+[ocaml]
+disabled = true
+[odin]
+disabled = true
+[opa]
+disabled = true
+[perl]
+disabled = true
+[purescript]
+disabled = true
+[quarto]
+disabled = true
+[raku]
+disabled = true
+[rlang]
+disabled = true
+[red]
+disabled = true
+[scala]
+disabled = true
+[solidity]
+disabled = true
+[swift]
+disabled = true
+[typst]
+disabled = true
+[vlang]
+disabled = true
+[vagrant]
+disabled = true
+[guix_shell]
+disabled = true
+[conda]
+disabled = true
+[meson]
+disabled = true
+[spack]
+disabled = true
+[memory_usage]
+disabled = true
+[openstack]
+disabled = true
+[azure]
+disabled = true
+[crystal]
+disabled = true
+[status]
+disabled = true
+[container]
+disabled = true
+[os]
+disabled = true
+[php]
+disabled = true
+[ruby]
+disabled = true
+[rust]
+disabled = true
+[c]
+disabled = true
+[elixir]
+disabled = true
+[elm]
+disabled = true
+[java]
+disabled = true
+[lua]
+disabled = true
+[nim]
+disabled = true
+[nodejs]
+disabled = true
+[git_status]
+disabled = true
+[golang]
+disabled = true
+[docker_context]
+disabled = true
+
+[directory]
+truncation_length = 0
+repo_root_style = "bold yellow"
+read_only = " 󰌾"
+
+[character]
+success_symbol = '[\$](green)'
+error_symbol = '[\$](red)'
+
+[aws]
+disabled = {{ not .work }}
+format = '$symbol:[$profile(\($region\))]($style) '
+symbol = " "
+style = "yellow"
+
+[aws.region_aliases]
+eu-north-1 = "SE"
+eu-west-3 = "FR"
+eu-west-1 = "IE"
+
+[gcloud]
+disabled = {{ not .work }}
+format = '$symbol:[$account(\($region\))]($style) '
+symbol = "gcp"
+style = "blue"
+
+[git_branch]
+format = 'on [$branch]($style) '
+
+{{- if .work }}
+[kubernetes]
+disabled = false
+format = '[$symbol$context( \($namespace\))]($style) '
+contexts = [
+{{ onepasswordDocument "u2yslhmcoyijg2kdhrrilcu7nm" | nindent 4 }}
+]
+style = "purple"
+{{- end }}
+
+[python]
+format = '[$symbol:${pyenv_prefix}${version}( \($virtualenv\))]($style) '
+symbol = " "
+style = "yellow"
+
+[terraform]
+format = "[$symbol:$workspace]($style) "
+symbol = "󱁢 "
+
+[zig]
+symbol = " "
+
+[hostname]
+ssh_symbol = " "
+
+[nix_shell]
+symbol = " "

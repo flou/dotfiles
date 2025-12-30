@@ -1,0 +1,319 @@
+{
+  "active_pane_modifiers": {
+    "border_size": 1.0,
+    "inactive_opacity": 1.0,
+  },
+  "agent": {
+    "always_allow_tool_actions": true,
+    "button": true,
+    "default_model": {
+      "model": "claude-sonnet-4",
+      "provider": "copilot_chat",
+    },
+    "default_profile": "write",
+    "enable_feedback": false,
+    "inline_assistant_model": {
+      "model": "claude-3.7-sonnet",
+      "provider": "copilot_chat",
+    },
+  },
+  "audio": {
+    "experimental.legacy_audio_compatible": false,
+  },
+  "buffer_font_family": "Iosevka",
+  "buffer_line_height": "standard",
+  "collaboration_panel": {
+    "button": true,
+  },
+  "colorize_brackets": true,
+  "debugger": {
+    "button": false,
+  },
+  "diagnostics": {
+    "button": false,
+    "include_warnings": true,
+    "inline": {
+      "enabled": true,
+    },
+  },
+  "edit_predictions": {
+    "copilot": {
+      "proxy": null,
+      "proxy_no_verify": null,
+    },
+    "enabled_in_text_threads": false,
+    "mode": "eager",
+  },
+  "features": {
+    "edit_prediction_provider": "copilot",
+  },
+  "file_finder": {
+    "modal_max_width": "medium",
+  },
+  "file_scan_exclusions": [
+    "**/.git",
+    "**/.svn",
+    "**/.hg",
+    "**/.jj",
+    "**/CVS",
+    "**/.DS_Store",
+    "**/Thumbs.db",
+    "**/.classpath",
+    "**/.settings",
+    "**/_build/",
+    "**/.elixir_ls/",
+    "**/generic-*.tgz",
+    "**/.helm_ls_cache",
+  ],
+  "file_types": {
+    "Helm": [
+      "**/templates/**/*.tpl",
+      "**/templates/**/*.yaml",
+      "**/templates/**/*.yml",
+      "**/helmfile.d/**/*.yaml",
+      "**/helmfile.d/**/*.yml",
+      "**/helmfile/**/*.yaml",
+      "**/crossplane-compositions/**/*.yaml",
+      "**/crossplane-compositions/**/*.tpl",
+    ],
+  },
+  "git": {
+    "hunk_style": "staged_hollow",
+    "inline_blame": {
+      "enabled": false,
+      "show_commit_summary": true,
+    },
+  },
+  {{- if .work }}
+  "git_hosting_providers": [
+    {
+      "base_url": "{{ .my.work_git_forge }}",
+      "name": "Gitlab",
+      "provider": "gitlab",
+    },
+  ],
+  {{- end }}
+  "git_panel": {
+    "button": false,
+    "dock": "right",
+  },
+  "global_lsp_settings": {
+    "button": false,
+  },
+  "gutter": {
+    "breakpoints": false,
+    "folds": true,
+    "line_numbers": true,
+    "min_line_number_digits": 4,
+    "runnables": false,
+  },
+  "icon_theme": "Catppuccin Frappé",
+  "indent_guides": {
+    "active_line_width": 1,
+    "background_coloring": "disabled",
+    "line_width": 1,
+  },
+  "inlay_hints": {
+    "enabled": false,
+    "show_background": true,
+  },
+  "journal": {
+    "hour_format": "hour24",
+    "path": "~/Documents",
+  },
+  "languages": {
+    "C": {
+      "tab_size": 2,
+    },
+    "Lua": {
+      "language_servers": ["lua-language-server"],
+      "tab_size": 2,
+    },
+    "Python": {
+      "language_servers": ["ruff", "basedpyright"],
+    },
+    "Swift": {
+      "format_on_save": "off",
+    },
+    "Terraform": {
+      "language_servers": ["terraform-ls"],
+    },
+  },
+  "minimap": {
+    "current_line_highlight": "all",
+    "show": "always",
+    "thumb": "always",
+    "thumb_border": "left_open",
+  },
+  "notification_panel": {
+    "button": false,
+  },
+  "outline_panel": {
+    "button": false,
+    "dock": "right",
+  },
+  "preferred_line_length": 120,
+  "preview_tabs": {
+    "enable_keep_preview_on_code_navigation": true,
+    "enable_preview_from_file_finder": true,
+    "enabled": true,
+  },
+  "profiles": {
+    "Presentation": {
+      "buffer_font_size": 20,
+      "debugger": {
+        "button": false,
+      },
+      "diagnostics": {
+        "button": false,
+      },
+      "global_lsp_settings": {
+        "button": false,
+      },
+      "status_bar": {
+        "active_language_button": false,
+        "cursor_position_button": false,
+      },
+      "theme": "One Light",
+      "toolbar": {
+        "breadcrumbs": false,
+        "quick_actions": false,
+        "selections_menu": false,
+      },
+      "ui_font_size": 20,
+    },
+    "Zen": {
+      "buffer_font_size": 20,
+      "current_line_highlight": "none",
+      "debugger": {
+        "button": false,
+      },
+      "diagnostics": {
+        "button": false,
+      },
+      "disable_ai": true,
+      "global_lsp_settings": {
+        "button": false,
+      },
+      "gutter": {
+        "breakpoints": false,
+        "folds": false,
+        "min_line_number_digits": 0,
+        "runnables": false,
+      },
+      "indent_guides": {
+        "enabled": false,
+      },
+      "minimap": {
+        "show": "never",
+      },
+      "scrollbar": {
+        "cursors": false,
+        "diagnostics": "none",
+        "git_diff": false,
+        "search_results": false,
+        "selected_symbol": false,
+        "show": "never",
+      },
+      "status_bar": {
+        "active_language_button": false,
+        "cursor_position_button": false,
+      },
+      "tab_bar": {
+        "show": false,
+        "show_nav_history_buttons": false,
+      },
+      "theme": "Zedokai Darker (Filter Octagon)",
+      "title_bar": {
+        "show_branch_icon": false,
+        "show_branch_name": false,
+        "show_menus": false,
+        "show_onboarding_banner": false,
+        "show_project_items": false,
+        "show_sign_in": false,
+        "show_user_picture": false,
+      },
+      "toolbar": {
+        "breadcrumbs": false,
+        "quick_actions": false,
+        "selections_menu": false,
+      },
+      "ui_font_size": 20,
+    },
+  },
+  "project_panel": {
+    "auto_reveal_entries": true,
+    "button": false,
+    "dock": "left",
+    "entry_spacing": "standard",
+    "hide_gitignore": true,
+  },
+  "redact_private_values": true,
+  "relative_line_numbers": "enabled",
+  "scroll_beyond_last_line": "off",
+  "scrollbar": {
+    "axes": {
+      "horizontal": true,
+      "vertical": true,
+    },
+    "git_diff": true,
+    "show": "auto",
+  },
+  "search": {
+    "button": false,
+  },
+  "seed_search_query_from_cursor": "selection",
+  "show_edit_predictions": true,
+  "show_signature_help_after_edits": false,
+  "soft_wrap": "editor_width",
+  "status_bar": {
+    "active_language_button": false,
+    "cursor_position_button": false,
+  },
+  "sticky_scroll": {
+    "enabled": true,
+  },
+  "tab_bar": {
+    "show": true,
+    "show_nav_history_buttons": false,
+  },
+  "tabs": {
+    "file_icons": false,
+    "git_status": true,
+    "show_close_button": "hover",
+    "show_diagnostics": "off",
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+  },
+  "terminal": {
+    "button": false,
+    "copy_on_select": true,
+    "env": {
+      "EDITOR": "zed --wait",
+    },
+    "font_family": "Iosevka",
+    "line_height": "standard",
+  },
+  "theme": {
+    "dark": "Popping and Locking",
+    "light": "Zedokai Darker (Filter Octagon)",
+  },
+  "title_bar": {
+    "show_branch_icon": true,
+    "show_branch_name": true,
+    "show_menus": false,
+    "show_onboarding_banner": false,
+    "show_project_items": true,
+    "show_sign_in": false,
+    "show_user_picture": false,
+  },
+  "toolbar": {
+    "breadcrumbs": true,
+    "quick_actions": true,
+    "selections_menu": true,
+  },
+  "use_system_path_prompts": false,
+  "vim_mode": true,
+}

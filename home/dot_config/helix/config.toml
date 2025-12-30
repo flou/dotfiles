@@ -1,0 +1,94 @@
+theme = "tokyonight_moon"
+
+[editor]
+color-modes = true
+cursorline = true
+auto-save = true
+bufferline = "multiple"
+# bufferline = "never"
+rulers = [101]
+true-color = true
+auto-pairs = true
+auto-format = true
+text-width = 100
+soft-wrap.enable = true
+smart-tab.supersede-menu = true
+end-of-line-diagnostics = "hint"
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = false # don't ignore hidden files
+
+[editor.indent-guides]
+render = true
+
+[editor.inline-diagnostics]
+cursor-line = "hint"
+
+[editor.lsp]
+display-inlay-hints = true
+display-messages = true
+
+[editor.statusline]
+left = [
+    "mode",
+    "spinner",
+    "file-name",
+    "file-modification-indicator",
+    "spacer",
+    "diagnostics",
+]
+right = ["version-control", "selections", "position", "file-encoding"]
+
+[keys.normal]
+G = "goto_file_end"
+Z = { Z = ":write-quit", Q = ":quit!" }
+"[" = { w = "goto_previous_buffer" }
+"]" = { w = "goto_next_buffer" }
+A-k = "keep_selections"
+K = "hover"
+H = "goto_previous_buffer"
+L = "goto_next_buffer"
+"backspace" = ["extend_line_below", "delete_selection"]
+"*" = [
+    "move_prev_word_start",
+    "move_next_word_end",
+    "search_selection",
+    "make_search_word_bounded",
+    "search_next",
+]
+"h" = ["move_prev_word_start", "move_next_word_end"]
+
+[keys.normal.space]
+w = ":write"
+i = ":toggle lsp.display-inlay-hints"
+q = ":buffer-close"
+Q = ":quit-all"
+o = "file_picker_in_current_buffer_directory"
+
+[keys.normal.D]
+p = [
+    ":insert-output printf 'std.debug.print(\"\\\\n\", .{});'",
+    "goto_first_nonwhitespace",
+]
+# Duplicate line above
+D = ["extend_to_line_bounds", "yank", "paste_before"]
+# Duplicate line below
+d = ["extend_to_line_bounds", "yank", "paste_after"]
+# Duplicate current line, then comment it out
+t = [
+    "extend_to_line_bounds",
+    "yank",
+    "toggle_comments",
+    "paste_after",
+    "collapse_selection",
+    "normal_mode",
+]
+
+[keys.select]
+G = "goto_file_end"     # vim
+"#" = "toggle_comments"

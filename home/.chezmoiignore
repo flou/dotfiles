@@ -1,0 +1,12 @@
+README.md
+
+{{- if not .work }}
+.aws
+.config/git/config.work
+.config/k9s
+.default-cloud-sdk-components
+.ssh/config.work
+.kube
+.vault
+Library/Application Support/k9s
+{{- end }}

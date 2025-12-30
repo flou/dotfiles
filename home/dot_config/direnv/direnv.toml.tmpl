@@ -1,0 +1,6 @@
+[whitelist]
+prefix = [
+  {{- if .work }}
+  "{{ .chezmoi.homeDir }}/workspace/{{ .my.work_git_forge }}"
+  {{- end -}}
+]

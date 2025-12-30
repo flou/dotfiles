@@ -1,0 +1,37 @@
+{{- $email := "" -}}
+{{- $workEmail := "" -}}
+{{- $workGitForge := "" -}}
+
+{{- $email = promptStringOnce . "my.email" "Personal email address" -}}
+
+{{- $work := promptBoolOnce . "work" "Is this my work machine" }}
+
+{{- if $work -}}
+{{- $workEmail = promptStringOnce . "my.work_email" "Work email address" -}}
+{{- $workGitForge = promptStringOnce . "my.work_git_forge" "Work git forge (e.g., gitlab.com)" -}}
+{{- end -}}
+
+data:
+  work: {{ $work }}
+  my:
+    name: "Lou Ferrand"
+    email: {{ $email | quote }}
+    workspace: "${HOME}/workspace"
+{{- if $work }}
+    work_email: {{ $workEmail | quote }}
+    work_git_forge: {{ $workGitForge | quote }}
+{{- end }}
+
+diff:
+  command: "delta"
+  pager: "delta"
+
+textconv:
+- pattern: "**/*.plist"
+  command: "plutil"
+  args:
+  - "-convert"
+  - "xml1"
+  - "-o"
+  - "-"
+  - "-"

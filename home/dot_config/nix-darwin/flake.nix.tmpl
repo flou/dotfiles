@@ -1,0 +1,66 @@
+{
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nix-darwin.url = "github:nix-darwin/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    flake-parts.url = "github:hercules-ci/flake-parts/main";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = { self, flake-parts, nix-darwin, nixpkgs, home-manager }:
+    let
+      configuration = { pkgs, ... }: {
+        environment.systemPackages = [
+          pkgs.devenv
+          pkgs.nixfmt-classic
+          pkgs.nixd
+          pkgs.nixpkgs-fmt
+          pkgs.qmk
+        ];
+
+        nix.enable = false;
+        nix.settings.experimental-features = "nix-command flakes";
+        nixpkgs.hostPlatform = "aarch64-darwin";
+        programs.zsh.enable = true;
+        system.configurationRevision = self.rev or self.dirtyRev or null;
+        system.primaryUser = "{{ .chezmoi.username }}";
+        system.stateVersion = 4;
+        security.pam.services.sudo_local.touchIdAuth = true;
+
+        users.users."{{ .chezmoi.username }}".home = "{{ .chezmoi.homeDir }}";
+
+        system.defaults = {
+          dock.autohide = true;
+          dock.autohide-delay = 0.1;
+          dock.autohide-time-modifier = 0.1;
+          dock.mru-spaces = false;
+          finder.AppleShowAllExtensions = true;
+          finder.FXPreferredViewStyle = "Nlsv";
+          # finder.FXArrangeGroupViewBy = "Name";
+          # finder.NewWindowTarget = "PfHm";
+          finder.ShowPathbar = true;
+          finder.ShowStatusBar = true;
+          screencapture.location = "~/Pictures/screenshots";
+        };
+      };
+    in {
+      # Build darwin flake using:
+      # $ darwin-rebuild build --flake .#{{ .chezmoi.hostname }}
+      darwinConfigurations."{{ .chezmoi.hostname }}" = nix-darwin.lib.darwinSystem {
+        modules = [
+          configuration
+          # home-manager.darwinModules.home-manager {
+          #   home-manager.useGlobalPkgs = true;
+          #   home-manager.useUserPackages = true;
+          #   home-manager.users.flou = import ./home.nix;
+          # }
+        ];
+      };
+
+      # Expose the package set, including overlays, for convenience.
+      darwinPackages = self.darwinConfigurations."{{ .chezmoi.hostname }}".pkgs;
+    };
+}
