@@ -58,13 +58,6 @@ function gsd() {
   git switch "${main}"
 }
 
-function scroll-and-clear-screen() {
-  printf '\n%.0s' {1..$LINES}
-  zle clear-screen
-}
-zle -N scroll-and-clear-screen
-bindkey '^l' scroll-and-clear-screen
-
 #
 # ZSH plugins
 #
@@ -95,28 +88,14 @@ if [[ -f "${HOMEBREW_PREFIX}/bin/mise" ]]; then
   fi
 fi
 
-function _git_log_preview() {
+function git-log-widget() {
   echo
   git lg -n 20
   echo
   zle reset-prompt
 }
-zle     -N             _git_log_preview
-bindkey -M emacs "^[g" _git_log_preview
-
-function _dirs() {
-  echo
-  dirs -v
-  echo
-  zle reset-prompt
-}
-zle -N _dirs
-bindkey "^[d" _dirs
-
-alias bathelp='bat --plain --language=help'
-function h() {
-  "$@" --help 2>&1 | bathelp
-}
+zle     -N             git-log-widget
+bindkey -M emacs '\eg' git-log-widget
 
 # Copy file content to clipboard
 function copy() {
