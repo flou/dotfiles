@@ -148,6 +148,8 @@
   navigate = true  # use n and N to move between diff sections
   dark = true      # or light = true, or omit for auto-detection
   zero-style = dim syntax
+[ghq]
+  root = ~/workspace
 
 {{- if .work }}
 [includeIf "gitdir:~/workspace/{{ .my.work_git_forge }}/"]
