@@ -16,20 +16,17 @@ alias vim=nvim
 alias yz="yazi"
 
 # ZSH plugins
-ANTIDOTE_HOME="${ZDOTDIR:-$HOME}/.antidote"
-ANTIDOTE_REPO="https://github.com/mattmc3/antidote"
-[[ ! -d "${ANTIDOTE_HOME}" ]] && git clone --depth=1 "${ANTIDOTE_REPO}" "${ANTIDOTE_HOME}"
-. "${ANTIDOTE_HOME}/antidote.zsh"
+. "${HOME}/.antidote/antidote.zsh"
 antidote load
 
 if [[ ! -z "$key_info" ]]; then
-  bindkey -M emacs "$key_info[Up]" history-substring-search-up
-  bindkey -M emacs "$key_info[Down]" history-substring-search-down
+  bindkey -M emacs "${key_info[Up]}" history-substring-search-up
+  bindkey -M emacs "${key_info[Down]}" history-substring-search-down
 fi
 
 if command -v bat >/dev/null 2>&1; then
   alias cat='bat --style "header,plain"'
-  export FZF_CTRL_T_OPTS="--walker-skip .git,node_modules,target --preview 'bat -n --color=always {}' --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+  export FZF_CTRL_T_OPTS="--walker-skip .git,node_modules,target --preview 'bat -n --color=always {}'"
 fi
 
 if command -v eza >/dev/null 2>&1; then
