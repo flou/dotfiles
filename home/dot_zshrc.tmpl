@@ -24,12 +24,11 @@ if [[ ! -z "$key_info" ]]; then
   bindkey -M emacs "${key_info[Down]}" history-substring-search-down
 fi
 
-if command -v bat >/dev/null 2>&1; then
+if (( $+commands[bat] )); then
   alias cat='bat --style "header,plain"'
-  export FZF_CTRL_T_OPTS="--walker-skip .git,node_modules,target --preview 'bat -n --color=always {}'"
 fi
 
-if command -v eza >/dev/null 2>&1; then
+if (( $+commands[eza] )); then
   ezargs="--ignore-glob='$(awk '{$1=$1} NF{printf "%s|", $0}' "${HOME}/.config/eza/ignore" | sed 's/|$//')' --group-directories-first"
 
   alias l="eza -a -s type $ezargs"
@@ -38,20 +37,20 @@ if command -v eza >/dev/null 2>&1; then
   alias tree="eza -lT --hyperlink $ezargs"
 fi
 
-if command -v fzf >/dev/null 2>&1; then
+if (( $+commands[fzf] )); then
   . <(fzf --zsh)
   . "${HOME}/.config/fzf/ghq.sh"
 fi
 
-if command -v starship >/dev/null 2>&1; then
+if (( $+commands[starship] )); then
   . <(starship init zsh)
 fi
 
-if command -v zoxide >/dev/null 2>&1; then
+if (( $+commands[zoxide] )); then
   . <(zoxide init --cmd cd zsh)
 fi
 
-if command -v vivid >/dev/null 2>&1; then
+if (( $+commands[vivid] )); then
   export LS_COLORS="$(vivid generate molokai)"
 fi
 
