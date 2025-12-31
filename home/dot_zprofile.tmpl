@@ -33,18 +33,10 @@ export SHELL_SESSIONS_DISABLE=1 # Make Apple Terminal behave.
 export PYTHONDONTWRITEBYTECODE=1
 
 # FZF options
-if command -v fzf >/dev/null; then
-  export FZF_DEFAULT_OPTS="--bind alt-up:preview-page-up --bind alt-down:preview-page-down --bind 'ctrl-o:execute-silent(code {})+abort'"
-
-  if command -v fd >/dev/null; then
-    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git --exclude .DS_Store --strip-cwd-prefix'
-    export FZF_CTRL_T_COMMAND='fd --type f --type d --hidden --follow --exclude .git --exclude .DS_Store --strip-cwd-prefix'
-  fi
-
-  if command -v bat >/dev/null 2>&1; then
-    export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {}'"
-  fi
-fi
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git --exclude .DS_Store --strip-cwd-prefix'
+export FZF_DEFAULT_OPTS="--bind alt-up:preview-page-up --bind alt-down:preview-page-down --bind 'ctrl-o:execute-silent(code {})+abort'"
+export FZF_CTRL_T_COMMAND='fd --type f --type d --hidden --follow --exclude .git --exclude .DS_Store --strip-cwd-prefix'
+export FZF_CTRL_T_OPTS="--walker-skip .git,node_modules,target --preview 'bat -n --color=always {}'"
 
 # typeset and export args:
 # -T: bind with a shell path variable
