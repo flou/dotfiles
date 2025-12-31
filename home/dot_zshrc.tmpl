@@ -17,7 +17,7 @@ alias yz="yazi"
 
 # ZSH plugins
 . "${HOME}/.antidote/antidote.zsh"
-antidote load
+antidote load "${HOME}/.config/zsh/zsh_plugins.txt"
 
 if [[ ! -z "$key_info" ]]; then
   bindkey -M emacs "${key_info[Up]}" history-substring-search-up
@@ -44,10 +44,6 @@ fi
 
 if (( $+commands[starship] )); then
   . <(starship init zsh)
-fi
-
-if (( $+commands[zoxide] )); then
-  . <(zoxide init --cmd cd zsh)
 fi
 
 if (( $+commands[vivid] )); then
