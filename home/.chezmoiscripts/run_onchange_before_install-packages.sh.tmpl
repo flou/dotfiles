@@ -3,10 +3,8 @@
 set -eufo pipefail
 
 {{ $brews := list
-    "bash"
     "bat"
     "btop"
-    "cargo-binstall"
     "chezmoi"
     "curlie"
     "difftastic"
@@ -20,15 +18,11 @@ set -eufo pipefail
     "gnu-sed"
     "helix"
     "jj"
-    "jless"
     "lazygit"
     "mise"
-    "moor"
     "moreutils"
-    "px"
     "ripgrep"
     "starship"
-    "usage"
     "vivid"
     "xh"
     "yazi"
@@ -43,7 +37,6 @@ set -eufo pipefail
 {{ if .work -}}
 {{ $brews = concat $brews (list
     "colima"
-    "viddy"
 ) -}}
 
 {{ $casks = concat $casks (list) -}}
