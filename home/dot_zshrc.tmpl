@@ -42,13 +42,15 @@ if (( $+commands[fzf] )); then
   . "${HOME}/.config/fzf/ghq.sh"
 fi
 
-if (( $+commands[starship] )); then
-  . <(starship init zsh)
-fi
-
 if (( $+commands[vivid] )); then
   export LS_COLORS="$(vivid generate molokai)"
 fi
+
+{{- if .work }}
+if (( $+commands[starship] )); then
+  . <(starship init zsh)
+fi
+{{- end }}
 
 function mkd() {
   mkdir -p "$1" && cd "$1" || return
@@ -58,20 +60,17 @@ function groot() {
   cd "$(git rev-parse --show-toplevel)" || return
 }
 
-function gsd() {
-  local main=$(git rev-parse --abbrev-ref origin/HEAD | sed 's#origin/##')
-  git switch "${main}"
-}
-
 autoload -z edit-command-line
 zle     -N              edit-command-line
 bindkey -M emacs "^X^E" edit-command-line
 
 if [[ -f "${HOMEBREW_PREFIX}/bin/mise" ]]; then
   eval "$(${HOMEBREW_PREFIX}/bin/mise activate zsh)"
+{{- if .work }}
   if [[ -f "${HOMEBREW_PREFIX}/bin/direnv" ]]; then
     eval "$(direnv hook zsh)"
   fi
+{{- end }}
 fi
 
 function git-log-widget() {

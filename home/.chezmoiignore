@@ -5,6 +5,7 @@ README.md
 .config/git/config.work
 .config/k9s
 .config/gcloud
+.config/starship.toml
 .ssh/config.work
 .kube
 .vault
