@@ -4,7 +4,7 @@ README.md
 .aws
 .config/git/config.work
 .config/k9s
-.default-cloud-sdk-components
+.config/gcloud
 .ssh/config.work
 .kube
 .vault
