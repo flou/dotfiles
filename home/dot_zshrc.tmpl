@@ -9,21 +9,29 @@ alias df="df -h"
 alias du="du -h"
 alias fd="noglob fd"
 alias gg="ghq clone"
+alias lg='lazygit'
 alias mkdir="mkdir -p"
 alias tailf='tail -f'
 alias vim=nvim
 alias yz="yazi"
+
+# ZSH plugins
+ANTIDOTE_HOME="${ZDOTDIR:-$HOME}/.antidote"
+ANTIDOTE_REPO="https://github.com/mattmc3/antidote"
+[[ ! -d "${ANTIDOTE_HOME}" ]] && git clone --depth=1 "${ANTIDOTE_REPO}" "${ANTIDOTE_HOME}"
+. "${ANTIDOTE_HOME}/antidote.zsh"
+antidote load
+
+if [[ ! -z "$key_info" ]]; then
+  bindkey -M emacs "$key_info[Up]" history-substring-search-up
+  bindkey -M emacs "$key_info[Down]" history-substring-search-down
+fi
 
 if command -v bat >/dev/null 2>&1; then
   alias cat='bat --style "header,plain"'
   export FZF_CTRL_T_OPTS="--walker-skip .git,node_modules,target --preview 'bat -n --color=always {}' --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 fi
 
-if command -v lazygit >/dev/null 2>&1; then
-  alias lg='lazygit'
-fi
-
-# eza is a better ls
 if command -v eza >/dev/null 2>&1; then
   ezargs="--ignore-glob='$(awk '{$1=$1} NF{printf "%s|", $0}' "${HOME}/.config/eza/ignore" | sed 's/|$//')' --group-directories-first"
 
@@ -33,12 +41,17 @@ if command -v eza >/dev/null 2>&1; then
   alias tree="eza -lT --hyperlink $ezargs"
 fi
 
+if command -v fzf >/dev/null 2>&1; then
+  . <(fzf --zsh)
+  . "${HOME}/.config/fzf/ghq.sh"
+fi
+
 if command -v starship >/dev/null 2>&1; then
-  eval "$(starship init zsh)"
+  . <(starship init zsh)
 fi
 
 if command -v zoxide >/dev/null 2>&1; then
-  eval "$(zoxide init --cmd cd zsh)"
+  . <(zoxide init --cmd cd zsh)
 fi
 
 if command -v vivid >/dev/null 2>&1; then
@@ -58,28 +71,9 @@ function gsd() {
   git switch "${main}"
 }
 
-#
-# ZSH plugins
-#
-ANTIDOTE_HOME="${ZDOTDIR:-$HOME}/.antidote"
-ANTIDOTE_REPO="https://github.com/mattmc3/antidote"
-[[ ! -d "${ANTIDOTE_HOME}" ]] && git clone --depth=1 "${ANTIDOTE_REPO}" "${ANTIDOTE_HOME}"
-source "${ANTIDOTE_HOME}/antidote.zsh"
-antidote load
-
-if [[ ! -z "$key_info" ]]; then
-  bindkey -M emacs "$key_info[Up]" history-substring-search-up
-  bindkey -M emacs "$key_info[Down]" history-substring-search-down
-fi
-
 autoload -z edit-command-line
 zle     -N              edit-command-line
 bindkey -M emacs "^X^E" edit-command-line
-
-if command -v fzf >/dev/null 2>&1; then
-  source <(fzf --zsh)
-  . ${HOME}/.config/fzf/ghq.sh
-fi
 
 if [[ -f "${HOMEBREW_PREFIX}/bin/mise" ]]; then
   eval "$(${HOMEBREW_PREFIX}/bin/mise activate zsh)"
