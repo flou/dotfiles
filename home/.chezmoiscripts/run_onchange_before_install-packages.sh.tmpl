@@ -8,21 +8,17 @@ set -eufo pipefail
     "chezmoi"
     "curlie"
     "difftastic"
-    "direnv"
     "eza"
     "fd"
     "fzf"
     "ghorg"
     "git"
     "git-delta"
-    "gnu-sed"
     "helix"
     "jj"
     "lazygit"
     "mise"
-    "moreutils"
     "ripgrep"
-    "starship"
     "vivid"
     "xh"
     "yazi"
@@ -31,11 +27,16 @@ set -eufo pipefail
 
 {{ $casks := (list
     "1password-cli"
+    "ghostty@tip"
 ) -}}
 
 {{ if .work -}}
 {{ $brews = concat $brews (list
     "colima"
+    "direnv"
+    "gnu-sed"
+    "moreutils"
+    "starship"
 ) -}}
 
 {{ $casks = concat $casks (list) -}}
