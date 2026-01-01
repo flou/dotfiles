@@ -13,6 +13,8 @@ alias tailf='tail -f'
 alias vim=nvim
 alias yz="yazi"
 
+export PROMPT='%F{yellow}%~%f %# '
+
 # ZSH plugins
 . "${HOME}/.antidote/antidote.zsh"
 antidote load "${HOME}/.config/zsh/zsh_plugins.txt"
@@ -52,11 +54,6 @@ function groot() {
 
 if [[ -f "${HOMEBREW_PREFIX}/bin/mise" ]]; then
   eval "$(${HOMEBREW_PREFIX}/bin/mise activate zsh)"
-{{- if .work }}
-  if [[ -f "${HOMEBREW_PREFIX}/bin/direnv" ]]; then
-    eval "$(direnv hook zsh)"
-  fi
-{{- end }}
 fi
 
 function git-log-widget() {
@@ -82,6 +79,10 @@ bindkey -M emacs "^X^E" edit-command-line
 
 if command -v starship &>/dev/null; then
   . <(starship init zsh)
+fi
+
+if command -v direnv &>/dev/null; then
+  eval "$(direnv hook zsh)"
 fi
 
 [[ -s "${HOME}/.config/zsh/work-aliases.sh" ]] && source "${HOME}/.config/zsh/work-aliases.sh"
