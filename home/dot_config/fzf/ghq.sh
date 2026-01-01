@@ -26,4 +26,4 @@ fzf-ghq-widget() {
 
 # ALT-S - cd into the selected git project
 zle     -N             fzf-ghq-widget
-bindkey -M emacs '\es' fzf-ghq-widget
+bindkey -M emacs '\eg' fzf-ghq-widget
