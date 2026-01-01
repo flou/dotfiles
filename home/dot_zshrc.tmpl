@@ -1,18 +1,3 @@
-alias path='echo -e ${PATH//:/\\n} | nl'
-
-alias cm=chezmoi
-alias curl="noglob curlie"
-alias curlie="noglob curlie"
-alias df="df -h"
-alias du="du -h"
-alias fd="noglob fd"
-alias gg="ghq clone"
-alias lg='lazygit'
-alias mkdir="mkdir -p"
-alias tailf='tail -f'
-alias vim=nvim
-alias yz="yazi"
-
 export PROMPT='%F{yellow}%~%f %# '
 
 # ZSH plugins
@@ -31,7 +16,6 @@ if command -v eza &>/dev/null; then
 
   alias ls="eza -a -s type $ezargs"
   alias l="eza -la -s type $ezargs"
-  alias ll="eza -la -s type $ezargs"
   alias tree="eza -lT --hyperlink $ezargs"
 fi
 
@@ -52,10 +36,6 @@ function groot() {
   cd "$(git rev-parse --show-toplevel)" || return
 }
 
-if [[ -f "${HOMEBREW_PREFIX}/bin/mise" ]]; then
-  eval "$(${HOMEBREW_PREFIX}/bin/mise activate zsh)"
-fi
-
 function git-log-widget() {
   git lg
   zle reset-prompt
@@ -73,16 +53,16 @@ function copy() {
 zstyle -d ':completion:*' special-dirs
 
 {{- if .work }}
-autoload -z edit-command-line
-zle     -N              edit-command-line
-bindkey -M emacs "^X^E" edit-command-line
+# autoload -z edit-command-line
+# zle     -N              edit-command-line
+# bindkey -M emacs "^X^E" edit-command-line
 
 if command -v starship &>/dev/null; then
   . <(starship init zsh)
 fi
 
 if command -v direnv &>/dev/null; then
-  eval "$(direnv hook zsh)"
+  . <(direnv hook zsh)
 fi
 
 [[ -s "${HOME}/.config/zsh/work-aliases.sh" ]] && source "${HOME}/.config/zsh/work-aliases.sh"
@@ -90,3 +70,22 @@ fi
 
 # Nix daemon profile
 [[ -d /nix/var/nix/profiles ]] && . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+
+if command -v mise &>/dev/null; then
+  . <(mise activate zsh)
+fi
+
+alias path='echo -e ${PATH//:/\\n} | nl'
+
+alias cm=chezmoi
+alias curl="noglob curlie"
+alias curlie="noglob curlie"
+alias df="df -h"
+alias du="du -h"
+alias fd="noglob fd"
+alias gg="ghq clone"
+alias lg='lazygit'
+alias mkdir="mkdir -p"
+alias tailf='tail -f'
+alias vim=nvim
+alias yz="yazi"
