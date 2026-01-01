@@ -1,6 +1,7 @@
 # vim:fileencoding=utf-8:filetype=sh:foldmethod=marker
 
 alias path='echo -e ${PATH//:/\\n} | nl'
+alias fpath='echo -e ${FPATH//:/\\n} | nl'
 
 alias cm=chezmoi
 alias curl="noglob curlie"
@@ -19,21 +20,19 @@ alias yz="yazi"
 . "${HOME}/.antidote/antidote.zsh"
 antidote load "${HOME}/.config/zsh/zsh_plugins.txt"
 
-if [[ ! -z "$key_info" ]]; then
-  bindkey -M emacs "${key_info[Up]}" history-substring-search-up
-  bindkey -M emacs "${key_info[Down]}" history-substring-search-down
-fi
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
 if (( $+commands[bat] )); then
   alias cat='bat --style "header,plain"'
 fi
 
 if (( $+commands[eza] )); then
-  ezargs="--ignore-glob='$(awk '{$1=$1} NF{printf "%s|", $0}' "${HOME}/.config/eza/ignore" | sed 's/|$//')' --group-directories-first"
+  ezargs="--ignore-glob='$(awk '{$1=$1} NF{printf "%s|", $0}' "${XDG_CONFIG_HOME}/eza/ignore" | sed 's/|$//')' --group-directories-first"
 
-  alias l="eza -a -s type $ezargs"
   alias ls="eza -a -s type $ezargs"
-  alias ll="eza -la --git-repos -s type $ezargs"
+  alias l="eza -la -s type $ezargs"
+  alias ll="eza -la -s type $ezargs"
   alias tree="eza -lT --hyperlink $ezargs"
 fi
 
@@ -74,9 +73,7 @@ if [[ -f "${HOMEBREW_PREFIX}/bin/mise" ]]; then
 fi
 
 function git-log-widget() {
-  echo
-  git lg -n 20
-  echo
+  git lg
   zle reset-prompt
 }
 zle     -N             git-log-widget
@@ -90,8 +87,6 @@ function copy() {
 }
 
 zstyle -d ':completion:*' special-dirs
-
-[[ -s "${HOME}/.config/zsh/python-venv.sh" ]] && source "${HOME}/.config/zsh/python-venv.sh"
 
 {{- if .work }}
 [[ -s "${HOME}/.config/zsh/work-aliases.sh" ]] && source "${HOME}/.config/zsh/work-aliases.sh"
