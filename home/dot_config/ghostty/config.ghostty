@@ -9,6 +9,8 @@ quit-after-last-window-closed = true
 
 window-inherit-working-directory = false
 window-padding-color = extend
+window-position-x = 10
+window-position-y = 10
 
 macos-option-as-alt = right
 macos-non-native-fullscreen = padded-notch
