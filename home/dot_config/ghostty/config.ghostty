@@ -7,7 +7,7 @@ window-theme = dark
 copy-on-select = clipboard
 quit-after-last-window-closed = true
 
-window-inherit-working-directory = false
+window-inherit-working-directory = true
 window-padding-color = extend
 window-position-x = 10
 window-position-y = 10
@@ -24,4 +24,4 @@ keybind = cmd+shift+arrow_right=move_tab:1
 keybind = cmd+shift+arrow_left=move_tab:-1
 keybind = ctrl+arrow_up=scroll_page_up
 keybind = ctrl+arrow_down=scroll_page_down
-keybind = cmd+key_d=new_split:auto
+keybind = cmd+d=new_split:auto
