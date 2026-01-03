@@ -75,6 +75,9 @@ if command -v mise &>/dev/null; then
   . <(mise activate zsh)
 fi
 
+# Undo widget on ctrl+-
+bindkey -M emacs "^[[45;5u" undo
+
 alias path='echo -e ${PATH//:/\\n} | nl'
 
 alias cm=chezmoi
