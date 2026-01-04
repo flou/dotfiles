@@ -181,11 +181,6 @@ terraform.rc
 
 node_modules/
 
-# Devenv
-.devenv*
-devenv.*
-devenv.local.nix
-
 # direnv
 .direnv
 
