@@ -68,8 +68,6 @@ fi
 [[ -s "${HOME}/.config/zsh/work-aliases.sh" ]] && source "${HOME}/.config/zsh/work-aliases.sh"
 {{- end }}
 
-# Nix daemon profile
-[[ -d /nix/var/nix/profiles ]] && . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
 if command -v mise &>/dev/null; then
   . <(mise activate zsh)
