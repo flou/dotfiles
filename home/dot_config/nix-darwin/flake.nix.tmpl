@@ -1,66 +1,139 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nix-darwin.url = "github:nix-darwin/nix-darwin";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    flake-parts.url = "github:hercules-ci/flake-parts/main";
-    home-manager = {
-      url = "github:nix-community/home-manager";
+    nix-darwin = {
+      url = "github:nix-darwin/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # home-manager = {
+    #   url = "github:nix-community/home-manager";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
   };
 
-  outputs = { self, flake-parts, nix-darwin, nixpkgs, home-manager }:
+  outputs =
+    {
+      self,
+      nix-darwin,
+      nixpkgs,
+    }:
     let
-      configuration = { pkgs, ... }: {
-        environment.systemPackages = [
-          pkgs.devenv
-          pkgs.nixfmt-classic
-          pkgs.nixd
-          pkgs.nixpkgs-fmt
-          pkgs.qmk
-        ];
+      configuration =
+        { pkgs, ... }:
+        {
+          nix.enable = false;
 
-        nix.enable = false;
-        nix.settings.experimental-features = "nix-command flakes";
-        nixpkgs.hostPlatform = "aarch64-darwin";
-        programs.zsh.enable = true;
-        system.configurationRevision = self.rev or self.dirtyRev or null;
-        system.primaryUser = "{{ .chezmoi.username }}";
-        system.stateVersion = 4;
-        security.pam.services.sudo_local.touchIdAuth = true;
+          environment.systemPackages = with pkgs; [
+            devenv
+            nil
+            nixfmt-classic
+            nixd
+            nixpkgs-fmt
+            qmk
+          ];
 
-        users.users."{{ .chezmoi.username }}".home = "{{ .chezmoi.homeDir }}";
+          networking.applicationFirewall.enable = true;
+          networking.applicationFirewall.enableStealthMode = true;
+          networking.applicationFirewall.allowSigned = true;
+          networking.applicationFirewall.allowSignedApp = true;
+          networking.computerName = "{{ .chezmoi.hostname }}";
 
-        system.defaults = {
-          dock.autohide = true;
-          dock.autohide-delay = 0.1;
-          dock.autohide-time-modifier = 0.1;
-          dock.mru-spaces = false;
-          finder.AppleShowAllExtensions = true;
-          finder.FXPreferredViewStyle = "Nlsv";
-          # finder.FXArrangeGroupViewBy = "Name";
-          # finder.NewWindowTarget = "PfHm";
-          finder.ShowPathbar = true;
-          finder.ShowStatusBar = true;
-          screencapture.location = "~/Pictures/screenshots";
+          nix.settings.experimental-features = "nix-command flakes";
+
+          nixpkgs.hostPlatform = "aarch64-darwin";
+          programs.zsh.enable = true;
+          security.pam.services.sudo_local.touchIdAuth = true;
+
+          system.configurationRevision = self.rev or self.dirtyRev or null;
+          system.primaryUser = "{{ .chezmoi.username }}";
+          system.stateVersion = 4;
+
+          system.defaults = {
+            CustomUserPreferences = {
+              # Disable siri
+              "com.apple.Siri" = {
+                "UAProfileCheckingStatus" = 0;
+                "siriEnabled" = 0;
+              };
+              "com.apple.AdLib" = {
+                # Disable personalized ads
+                allowApplePersonalizedAdvertising = false;
+              };
+              "com.apple.desktopservices" = {
+                # Avoid creating .DS_Store files on network or USB volumes
+                DSDontWriteNetworkStores = true;
+                DSDontWriteUSBStores = true;
+              };
+            };
+
+            NSGlobalDomain."com.apple.keyboard.fnState" = false;
+            NSGlobalDomain.AppleEnableSwipeNavigateWithScrolls = true;
+            NSGlobalDomain.AppleShowAllExtensions = true;
+            NSGlobalDomain.AppleShowScrollBars = "WhenScrolling";
+            NSGlobalDomain.InitialKeyRepeat = 15;
+            NSGlobalDomain.KeyRepeat = 2;
+            NSGlobalDomain.NSAutomaticCapitalizationEnabled = false;
+            NSGlobalDomain.NSAutomaticDashSubstitutionEnabled = false;
+            NSGlobalDomain.NSAutomaticInlinePredictionEnabled = false;
+            NSGlobalDomain.NSAutomaticPeriodSubstitutionEnabled = false;
+            NSGlobalDomain.NSAutomaticQuoteSubstitutionEnabled = false;
+            NSGlobalDomain.NSAutomaticSpellingCorrectionEnabled = false;
+            NSGlobalDomain.NSDocumentSaveNewDocumentsToCloud = false;
+
+            controlcenter.BatteryShowPercentage = false;
+
+            dock.autohide = true;
+            dock.autohide-delay = 0.1;
+            dock.autohide-time-modifier = 0.1;
+            dock.mineffect = "genie";
+            dock.magnification = false;
+            dock.show-recents = false;
+            dock.mru-spaces = false;
+            dock.tilesize = 52;
+
+            finder._FXShowPosixPathInTitle = true;
+            finder.AppleShowAllExtensions = true;
+            finder.FXPreferredViewStyle = "Nlsv";
+            finder.NewWindowTarget = "Home";
+            finder.QuitMenuItem = true;
+            finder.ShowPathbar = true;
+            finder.ShowStatusBar = true;
+
+            hitoolbox.AppleFnUsageType = "Do Nothing";
+
+            screencapture.location = "~/Pictures/screenshots";
+
+            trackpad.Clicking = true;
+            trackpad.Dragging = true;
+            trackpad.TrackpadRightClick = true;
+            trackpad.TrackpadThreeFingerDrag = false;
+            trackpad.FirstClickThreshold = 2;
+            trackpad.SecondClickThreshold = 2;
+            trackpad.ActuateDetents = true;
+            trackpad.ActuationStrength = 1;
+            trackpad.DragLock = true;
+            trackpad.ForceSuppressed = false;
+          };
+
+          users.users."{{ .chezmoi.username }}" = {
+            name = "{{ .chezmoi.username }}";
+            home = "{{ .chezmoi.homeDir }}";
+          };
         };
-      };
-    in {
-      # Build darwin flake using:
-      # $ darwin-rebuild build --flake .#{{ .chezmoi.hostname }}
+
+    in
+    {
       darwinConfigurations."{{ .chezmoi.hostname }}" = nix-darwin.lib.darwinSystem {
         modules = [
           configuration
           # home-manager.darwinModules.home-manager {
           #   home-manager.useGlobalPkgs = true;
           #   home-manager.useUserPackages = true;
-          #   home-manager.users.flou = import ./home.nix;
+          #   home-manager.users."{{ .chezmoi.username }}" = import ./home.nix;
           # }
         ];
       };
 
-      # Expose the package set, including overlays, for convenience.
       darwinPackages = self.darwinConfigurations."{{ .chezmoi.hostname }}".pkgs;
     };
 }
