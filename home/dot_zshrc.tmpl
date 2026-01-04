@@ -76,6 +76,12 @@ fi
 # Undo widget on ctrl+-
 bindkey -M emacs "^[[45;5u" undo
 
+function open-cwd-zed-widget() {
+  zed .
+}
+zle     -N             open-cwd-zed-widget
+bindkey -M emacs '\e/' open-cwd-zed-widget
+
 alias path='echo -e ${PATH//:/\\n} | nl'
 
 alias cm=chezmoi
