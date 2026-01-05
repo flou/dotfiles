@@ -16,10 +16,7 @@ trusted_config_paths = ["{{ .chezmoi.homeDir }}/workspace/{{ .my.work_git_forge 
 
 [tools]
 cargo-binstall = "latest"
-ghq = "latest"
 go = "latest"
-jujutsu = "latest"
-neovim = "latest"
 node = "latest"
 python = "latest"
 ruff = "latest"
@@ -59,5 +56,4 @@ viddy = "latest"
 
 {{- else }}
 elixir = "latest"
-erlang = "latest"
 {{- end }}

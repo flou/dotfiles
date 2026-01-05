@@ -24,12 +24,31 @@
           nix.enable = false;
 
           environment.systemPackages = with pkgs; [
+            bat
+            btop
+            curlie
+            delta
             devenv
+            difftastic
+            erlang
+            eza
+            fd
+            fzf
+            ghq
+            git
+            helix
+            jujutsu
+            lazygit
+            neovim
             nil
-            nixfmt-classic
             nixd
+            nixfmt-classic
             nixpkgs-fmt
             qmk
+            rebar3
+            ripgrep
+            vivid
+            xh
           ];
 
           networking.applicationFirewall.enable = true;
