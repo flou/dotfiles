@@ -8,31 +8,13 @@
   defaultBranch = main
 [core]
   autocrlf = false
-  fileMode = true
   editor = nvim
+  fileMode = true
   whitespace = -trailing
 [credential]
   helper = osxkeychain
 [commit]
   verbose = true
-[color]
-  ui = auto
-[color "branch"]
-  current = yellow reverse
-  local   = yellow
-  remote  = green
-[color "diff-highlight"]
-  oldNormal = red bold
-  oldHighlight = red bold 52
-  newNormal = green bold
-  newHighlight = green bold 22
-[color "diff"]
-  meta = yellow
-  frag = magenta bold
-  commit = yellow bold
-  old = red bold
-  new = green bold
-  whitespace = red reverse
 [color "status"]
   added      = yellow
   changed    = green
@@ -95,9 +77,9 @@
   autosquash = true
   updateRefs = true
 [push]
+  autoSetupRemote = true
   default = tracking
   followTags = false
-  autoSetupRemote = true
 [fetch]
   all = true
   prune = true
@@ -105,27 +87,27 @@
 [blame]
   date = short
 [log]
-  date = human
   color = always
+  date = human
 [merge]
-  verbosity = 1
+  conflictstyle = zdiff3
   ff = only
   tool = smerge
-  conflictstyle = zdiff3
+  verbosity = 1
 [diff]
-  mnemonicPrefix = true
   algorithm = histogram
+  colorMoved = true
+  conflictstyle = zdiff3
+  mnemonicPrefix = true
   renames = true
   submodule = log
   tool = smerge
-  conflictstyle = zdiff3
-  colorMoved = true
 [rerere]
   enabled = true
   autoupdate = true
 [status]
-  showUntrackedFiles = all
   relativePaths = true
+  showUntrackedFiles = all
   submoduleSummary = true
 [grep]
   extendedRegexp = true
@@ -133,8 +115,8 @@
   statusHints = true
 [pager]
   diff = delta
-  show = delta
   log = delta
+  show = delta
 [interactive]
   diffFilter = delta --color-only
 [tag]
@@ -145,8 +127,9 @@
   main-view-commit-title-overflow = 55
   reference-format = hide:other
 [delta]
-  navigate = true  # use n and N to move between diff sections
-  dark = true      # or light = true, or omit for auto-detection
+  hyperlinks = true
+  hyperlinks-file-link-format = "zed://file/{path}:{line}"
+  navigate = true
   zero-style = dim syntax
 [ghq]
   root = ~/workspace
