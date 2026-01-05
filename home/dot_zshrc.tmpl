@@ -1,11 +1,8 @@
 export PROMPT='%F{yellow}%~%f %# '
 
-# ZSH plugins
+# Load antidote and ZSH plugins
 . "${HOME}/.antidote/antidote.zsh"
 antidote load "${HOME}/.config/zsh/zsh_plugins.txt"
-
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
 
 if command -v bat &>/dev/null; then
   alias cat='bat --style "header,plain"'
@@ -28,6 +25,8 @@ if command -v vivid &>/dev/null; then
   export LS_COLORS="$(vivid generate molokai)"
 fi
 
+# Custom functions
+
 function mkd() {
   mkdir -p "$1" && cd "$1" || return
 }
@@ -36,6 +35,18 @@ function groot() {
   cd "$(git rev-parse --show-toplevel)" || return
 }
 
+function copy() {
+  if [[ -n "${1}" ]]; then
+    pbcopy <"${1}"
+  fi
+}
+
+if command -v mise &>/dev/null; then
+  . <(mise activate zsh)
+fi
+
+# ZSH widgets and keybindings
+
 function git-log-widget() {
   git lg
   zle reset-prompt
@@ -43,14 +54,36 @@ function git-log-widget() {
 zle     -N             git-log-widget
 bindkey -M emacs '\eh' git-log-widget
 
-# Copy file content to clipboard
-function copy() {
-  if [[ -n "${1}" ]]; then
-    pbcopy <"${1}"
-  fi
+function open-cwd-zed-widget() {
+  zed .
 }
+zle     -N             open-cwd-zed-widget
+bindkey -M emacs '\e/' open-cwd-zed-widget
+
+bindkey -M emacs '^[[A'     history-substring-search-up
+bindkey -M emacs '^[[B'     history-substring-search-down
+bindkey -M emacs '^[[3~'    delete-char
+bindkey -M emacs "^[[45;5u" undo
 
 zstyle -d ':completion:*' special-dirs
+
+# Aliases
+
+alias path='echo -e ${PATH//:/\\n} | nl'
+
+alias cm=chezmoi
+alias curl="noglob curlie"
+alias curlie="noglob curlie"
+alias df="df -h"
+alias du="du -h"
+alias fd="noglob fd"
+alias gg="ghq clone"
+alias lg='lazygit'
+alias mkdir="mkdir -p"
+alias pcat="plutil -p"
+alias tailf='tail -f'
+alias vim=nvim
+alias yz="yazi"
 
 {{- if .work }}
 # autoload -z edit-command-line
@@ -67,32 +100,3 @@ fi
 
 [[ -s "${HOME}/.config/zsh/work-aliases.sh" ]] && source "${HOME}/.config/zsh/work-aliases.sh"
 {{- end }}
-
-
-if command -v mise &>/dev/null; then
-  . <(mise activate zsh)
-fi
-
-# Undo widget on ctrl+-
-bindkey -M emacs "^[[45;5u" undo
-
-function open-cwd-zed-widget() {
-  zed .
-}
-zle     -N             open-cwd-zed-widget
-bindkey -M emacs '\e/' open-cwd-zed-widget
-
-alias path='echo -e ${PATH//:/\\n} | nl'
-
-alias cm=chezmoi
-alias curl="noglob curlie"
-alias curlie="noglob curlie"
-alias df="df -h"
-alias du="du -h"
-alias fd="noglob fd"
-alias gg="ghq clone"
-alias lg='lazygit'
-alias mkdir="mkdir -p"
-alias tailf='tail -f'
-alias vim=nvim
-alias yz="yazi"
