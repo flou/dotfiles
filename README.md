@@ -31,13 +31,13 @@ mise install
 Install Nix
 
 ```bash
-curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --determinate
+curl -fsSL https://install.determinate.systems/nix | sh -s -- install
 
-cd ~/.config/nix-darwin
+cd "${HOME}/.config/nix-darwin"
 nix flake update
 # Fist time
-sudo -i nix run -- nix-darwin switch --flake ~/.config/nix-darwin
+sudo -i nix run -- nix-darwin switch --flake "${HOME}/.config/nix-darwin"
 
 # Subsequent times
-sudo -i darwin-rebuild switch --flake ~/.config/nix-darwin
+sudo -i darwin-rebuild switch --flake "${HOME}/.config/nix-darwin"
 ```
