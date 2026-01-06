@@ -4,11 +4,11 @@ export PROMPT='%F{yellow}%~%f %# '
 . "${HOME}/.antidote/antidote.zsh"
 antidote load "${HOME}/.config/zsh/zsh_plugins.txt"
 
-if command -v bat &>/dev/null; then
+if (( $+commands[bat] )); then
   alias cat='bat --style "header,plain"'
 fi
 
-if command -v eza &>/dev/null; then
+if (( $+commands[eza] )); then
   ezargs="--ignore-glob='$(awk '{$1=$1} NF{printf "%s|", $0}' "${XDG_CONFIG_HOME}/eza/ignore" | sed 's/|$//')' --group-directories-first"
 
   alias ls="eza -a -s type $ezargs"
@@ -16,12 +16,12 @@ if command -v eza &>/dev/null; then
   alias tree="eza -lT --hyperlink $ezargs"
 fi
 
-if command -v fzf &>/dev/null; then
+if (( $+commands[fzf] )); then
   . <(fzf --zsh)
   . "${HOME}/.config/fzf/ghq.sh"
 fi
 
-if command -v vivid &>/dev/null; then
+if (( $+commands[vivid] )); then
   export LS_COLORS="$(vivid generate molokai)"
 fi
 
@@ -41,7 +41,7 @@ function copy() {
   fi
 }
 
-if command -v mise &>/dev/null; then
+if (( $+commands[mise] )); then
   . <(mise activate zsh)
 fi
 
@@ -90,11 +90,11 @@ alias yz="yazi"
 # zle     -N              edit-command-line
 # bindkey -M emacs "^X^E" edit-command-line
 
-if command -v starship &>/dev/null; then
+if (( $+commands[starship] )); then
   . <(starship init zsh)
 fi
 
-if command -v direnv &>/dev/null; then
+if (( $+commands[direnv] )); then
   . <(direnv hook zsh)
 fi
 
