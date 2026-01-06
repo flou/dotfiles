@@ -22,8 +22,10 @@
         { pkgs, ... }:
         {
           nix.enable = false;
+          nixpkgs.config.allowUnfree = true;
 
           environment.systemPackages = with pkgs; [
+            _1password-cli
             bat
             btop
             curlie
