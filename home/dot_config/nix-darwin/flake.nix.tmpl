@@ -60,7 +60,8 @@
           networking.applicationFirewall.enableStealthMode = true;
           networking.applicationFirewall.allowSigned = true;
           networking.applicationFirewall.allowSignedApp = true;
-          networking.computerName = "{{ .chezmoi.hostname }}";
+          networking.computerName = "{{ .hostname }}";
+          networking.hostName = "{{ .hostname }}";
 
           nix.settings.experimental-features = "nix-command flakes";
 
@@ -135,6 +136,8 @@
 
             screencapture.location = "~/Pictures/screenshots";
 
+            smb.NetBIOSName = "{{ .hostname }}";
+
             trackpad.Clicking = true;
             trackpad.Dragging = true;
             trackpad.TrackpadRightClick = true;
@@ -155,7 +158,7 @@
 
     in
     {
-      darwinConfigurations."{{ .chezmoi.hostname }}" = nix-darwin.lib.darwinSystem {
+      darwinConfigurations."{{ .hostname }}" = nix-darwin.lib.darwinSystem {
         modules = [
           configuration
           # home-manager.darwinModules.home-manager {
@@ -166,6 +169,6 @@
         ];
       };
 
-      darwinPackages = self.darwinConfigurations."{{ .chezmoi.hostname }}".pkgs;
+      darwinPackages = self.darwinConfigurations."{{ .hostname }}".pkgs;
     };
 }

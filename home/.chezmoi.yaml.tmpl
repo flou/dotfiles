@@ -11,7 +11,14 @@
 {{- $workGitForge = promptStringOnce . "my.work_git_forge" "Work git forge (e.g., gitlab.com)" -}}
 {{- end -}}
 
+{{/* work around unreliable hostname on darwin */}}
+{{- $hostname := .chezmoi.hostname -}}
+{{- if eq .chezmoi.os "darwin" -}}
+{{-   $hostname := output "scutil" "--get" "LocalHostName" | trim -}}
+{{- end -}}
+
 data:
+  hostname: {{ $hostname | quote }}
   work: {{ $work }}
   my:
     name: "Lou Ferrand"
