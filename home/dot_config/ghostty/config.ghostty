@@ -7,7 +7,10 @@ window-theme = dark
 copy-on-select = clipboard
 quit-after-last-window-closed = true
 
-window-inherit-working-directory = true
+split-inherit-working-directory = true
+tab-inherit-working-directory = false
+window-inherit-working-directory = false
+
 window-padding-color = extend
 window-position-x = 10
 window-position-y = 10
