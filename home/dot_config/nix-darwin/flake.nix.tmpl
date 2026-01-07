@@ -103,8 +103,8 @@
             NSGlobalDomain.AppleEnableSwipeNavigateWithScrolls = true;
             NSGlobalDomain.AppleShowAllExtensions = true;
             NSGlobalDomain.AppleShowScrollBars = "WhenScrolling";
-            NSGlobalDomain.InitialKeyRepeat = 15;
-            NSGlobalDomain.KeyRepeat = 2;
+            NSGlobalDomain.InitialKeyRepeat = 10;
+            NSGlobalDomain.KeyRepeat = 1;
             NSGlobalDomain.NSAutomaticCapitalizationEnabled = false;
             NSGlobalDomain.NSAutomaticDashSubstitutionEnabled = false;
             NSGlobalDomain.NSAutomaticInlinePredictionEnabled = false;
@@ -124,7 +124,6 @@
             dock.mru-spaces = false;
             dock.tilesize = 52;
 
-            finder._FXShowPosixPathInTitle = false;
             finder.AppleShowAllExtensions = true;
             finder.FXPreferredViewStyle = "Nlsv";
             finder.NewWindowTarget = "Home";
@@ -148,6 +147,11 @@
             trackpad.ActuationStrength = 1;
             trackpad.DragLock = true;
             trackpad.ForceSuppressed = false;
+          };
+
+          system.keyboard = {
+            enableKeyMapping = true;
+            remapCapsLockToControl = true;
           };
 
           users.users."{{ .chezmoi.username }}" = {
