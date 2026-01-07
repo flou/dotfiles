@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+
+import os
+
+for name, value in sorted(os.environ.items()):
+    # Skip huge LS_COLORS when using vivid
+    # Hiding this shouldn't matter much
+    if name == "LS_COLORS":
+        continue
+    print(f"{name}={value}")
