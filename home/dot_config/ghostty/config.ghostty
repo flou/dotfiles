@@ -28,3 +28,4 @@ keybind = cmd+shift+arrow_left=move_tab:-1
 keybind = ctrl+arrow_up=scroll_page_up
 keybind = ctrl+arrow_down=scroll_page_down
 keybind = cmd+d=new_split:auto
+keybind = shift+enter=text:\x1b\r
