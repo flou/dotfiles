@@ -20,6 +20,7 @@ macos-non-native-fullscreen = padded-notch
 mouse-hide-while-typing = false
 macos-titlebar-proxy-icon = hidden
 macos-titlebar-style = tabs
+macos-window-buttons = hidden
 
 keybind = cmd+arrow_right=next_tab
 keybind = cmd+arrow_left=previous_tab
