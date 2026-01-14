@@ -26,12 +26,6 @@
     },
   },
   {
-    "context": "Workspace",
-    "bindings": {
-      "cmd-shift-t": null,
-    },
-  },
-  {
     "context": "vim_mode == insert",
     "bindings": {
       "ctrl-e": "editor::MoveToEndOfLine",

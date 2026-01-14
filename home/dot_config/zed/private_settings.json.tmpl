@@ -1,4 +1,8 @@
 {
+  "which_key": {
+    "enabled": true,
+    "delay_ms": 500,
+  },
   "session": {
     "trust_all_worktrees": true,
   },
@@ -7,10 +11,16 @@
     "inactive_opacity": 1.0,
   },
   "agent": {
+    "favorite_models": [
+      {
+        "provider": "copilot_chat",
+        "model": "claude-opus-4.5",
+      },
+    ],
     "always_allow_tool_actions": true,
     "button": true,
     "default_model": {
-      "model": "claude-sonnet-4.5",
+      "model": "claude-opus-4.5",
       "provider": "copilot_chat",
     },
     "default_profile": "write",
@@ -23,7 +33,7 @@
   "buffer_font_family": "CommitMono",
   "buffer_line_height": "standard",
   "collaboration_panel": {
-    "button": true,
+    "button": false,
   },
   "colorize_brackets": true,
   "debugger": {
