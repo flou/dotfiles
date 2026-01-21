@@ -47,6 +47,10 @@ if (( $+commands[mise] )); then
   . <(mise activate zsh)
 fi
 
+if (( $+commands[starship] )); then
+  . <(starship init zsh)
+fi
+
 # ZSH widgets and keybindings
 
 function git-log-widget() {
@@ -89,10 +93,6 @@ alias yz="yazi"
 # autoload -z edit-command-line
 # zle     -N              edit-command-line
 # bindkey -M emacs "^X^E" edit-command-line
-
-if (( $+commands[starship] )); then
-  . <(starship init zsh)
-fi
 
 if (( $+commands[direnv] )); then
   . <(direnv hook zsh)

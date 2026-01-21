@@ -5,6 +5,7 @@ set -eufo pipefail
 {{ $brews := list
     "chezmoi"
     "mise"
+    "starship"
 -}}
 
 {{ $casks := (list
@@ -19,7 +20,6 @@ set -eufo pipefail
     "direnv"
     "gnu-sed"
     "moreutils"
-    "starship"
 ) -}}
 
 {{ $casks = concat $casks (list) -}}
