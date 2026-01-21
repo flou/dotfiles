@@ -27,8 +27,8 @@ export VISUAL="zed --wait"
 export GOPATH="${HOME}/go"
 export QMK_HOME="{{ .my.workspace }}/github.com/qmk/qmk_firmware"
 
-export RIPGREP_CONFIG_PATH="${HOME}/.config/ripgrep/rc"
-export LESSHISTFILE=~/.local/state/lesshst
+export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME}/ripgrep/rc"
+export LESSHISTFILE="${XDG_CACHE_HOME}/lesshst"
 
 export SHELL_SESSIONS_DISABLE=1 # Make Apple Terminal behave.
 
