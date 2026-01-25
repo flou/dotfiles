@@ -1,10 +1,7 @@
-export PROMPT='%F{yellow}%~%f %# '
+export PROMPT='%F{yellow}%~%f '
 
 setopt autocd
 setopt extendedglob
-
-# Begin History
-
 setopt bang_hist               # Treat the '!' character specially during expansion.
 setopt extended_history        # Write the history file in the ':start:elapsed;command' format.
 setopt hist_expire_dups_first  # Expire a duplicate event first when trimming history.
@@ -25,21 +22,57 @@ HISTSIZE=1000000
 SAVEHIST=1000000
 HISTORY_IGNORE="(ls|l|cd|pwd|exit|cd ..|..)"
 
-alias hist='fc -li'
-alias history-stat="history 0 | awk '{print \$2}' | sort | uniq -c | sort -n -r | head"
+# Cache directory for shell initialization files
+ZSH_CACHE_DIR="${XDG_CACHE_HOME}/zsh"
+[[ -d "$ZSH_CACHE_DIR" ]] || mkdir -p "$ZSH_CACHE_DIR"
 
-# End History
+# cache_eval: Cache command output to a file and source it
+# Usage: cache_eval <cache_name> <check_file> <command...>
+function cache_eval() {
+  local cache_name="$1"
+  local check_file="$2"
+  shift 2
+  local cache_file="$ZSH_CACHE_DIR/$cache_name"
+
+  if [[ ! -f "$cache_file" || "$check_file" -nt "$cache_file" ]]; then
+    "$@" > "$cache_file"
+    echo :toto
+  fi
+  . "$cache_file"
+}
+
+# cache_val: Cache command output and return it (for variable assignment)
+# Usage: VAR=$(cache_val <cache_name> <check_file> <command...>)
+function cache_val() {
+  local cache_name="$1"
+  local check_file="$2"
+  shift 2
+  local cache_file="$ZSH_CACHE_DIR/$cache_name"
+
+  if [[ ! -f "$cache_file" || "$check_file" -nt "$cache_file" ]]; then
+    "$@" > "$cache_file"
+  fi
+  < "$cache_file"
+}
 
 # Load antidote and ZSH plugins
-. "${HOME}/.antidote/antidote.zsh"
-antidote load "${HOME}/.config/zsh/zsh_plugins.txt"
+zsh_plugins="${XDG_CONFIG_HOME}/zsh/zsh_plugins"
+# [[ -f ${zsh_plugins}.txt ]] || touch ${zsh_plugins}.txt
 
-if (( $+commands[bat] )); then
-  alias cat='bat --style "header,plain"'
+fpath=("${HOME}/.antidote/functions" $fpath)
+autoload -Uz antidote
+
+# Generate a new static file whenever .zsh_plugins.txt is updated.
+if [[ ! "${zsh_plugins}.zsh" -nt "${zsh_plugins}.txt" ]]; then
+  antidote bundle < "${zsh_plugins}.txt" >| "${zsh_plugins}.zsh"
 fi
+source ${zsh_plugins}.zsh
 
 if (( $+commands[eza] )); then
-  ezargs="--ignore-glob='$(awk '{$1=$1} NF{printf "%s|", $0}' "${XDG_CONFIG_HOME}/eza/ignore" | sed 's/|$//')' --group-directories-first"
+  _eza_ignore_src="${XDG_CONFIG_HOME}/eza/ignore"
+  _eza_ignore=$(cache_val eza_ignore "$_eza_ignore_src" awk '{$1=$1} NF{printf "%s|", $0}' "$_eza_ignore_src" | sed 's/|$//')
+  ezargs="--ignore-glob='$_eza_ignore' --group-directories-first"
+  unset _eza_ignore _eza_ignore_src
 
   alias ls="eza -a -s type $ezargs"
   alias l="eza -la -s type $ezargs"
@@ -47,75 +80,20 @@ if (( $+commands[eza] )); then
 fi
 
 if (( $+commands[fzf] )); then
-  . <(fzf --zsh)
-  . "${HOME}/.config/fzf/ghq.sh"
+  cache_eval fzf.zsh "$(whence -p fzf)" fzf --zsh
+  . "${XDG_CONFIG_HOME}/fzf/ghq.sh"
+fi
+
+if (( $+commands[mise] )); then
+  cache_eval mise.zsh "$(whence -p mise)" mise activate zsh
 fi
 
 if (( $+commands[vivid] )); then
-  export LS_COLORS="$(vivid generate molokai)"
+  export LS_COLORS="$(cache_val vivid_ls_colors "$(whence -p vivid)" vivid generate molokai)"
 fi
 
-# Custom functions
-
-function mkd() {
-  mkdir -p "$1" && cd "$1" || return
-}
-
-function groot() {
-  cd "$(git rev-parse --show-toplevel)" || return
-}
-
-function copy() {
-  if [[ -n "${1}" ]]; then
-    pbcopy <"${1}"
-  fi
-}
-
-if (( $+commands[mise] )); then
-  . <(mise activate zsh)
-fi
-
-if (( $+commands[starship] )); then
-  . <(starship init zsh)
-fi
-
-# ZSH widgets and keybindings
-
-function git-log-widget() {
-  git lg
-  zle reset-prompt
-}
-zle     -N             git-log-widget
-bindkey -M emacs '\eh' git-log-widget
-
-function open-cwd-zed-widget() {
-  zed .
-}
-zle     -N             open-cwd-zed-widget
-bindkey -M emacs '\e/' open-cwd-zed-widget
-
-bindkey -M emacs '^[[A'     history-substring-search-up
-bindkey -M emacs '^[[B'     history-substring-search-down
-bindkey -M emacs '^[[3~'    delete-char
-bindkey -M emacs "^[[45;5u" undo
-
-# Aliases
-
-alias path='echo -e ${PATH//:/\\n} | nl'
-
-alias cm=chezmoi
-alias curl="noglob curlie"
-alias curlie="noglob curlie"
-alias df="df -h"
-alias du="du -h"
-alias fd="noglob fd"
-alias gg="ghq clone"
-alias lg='lazygit'
-alias mkdir="mkdir -p"
-alias pcat="plutil -p"
-alias tailf='tail -f'
-alias vim=nvim
-alias yz="yazi"
+. "${XDG_CONFIG_HOME}/zsh/aliases.sh"
+. "${XDG_CONFIG_HOME}/zsh/widgets.sh"
 
 {{- if .work }}
 # autoload -z edit-command-line
