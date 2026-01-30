@@ -2,9 +2,14 @@
 
 origin=$(git remote get-url origin)
 
-if [[ $origin == git@* ]]; then
+if [[ $origin == ssh://* ]]; then
+    # Handle ssh://git@host/path format
+    origin=${origin#ssh://}
     origin=${origin#git@}
-    origin=${origin/:/\//}
+    origin="https://$origin"
+elif [[ $origin == git@* ]]; then
+    origin=${origin#git@}
+    origin=${origin/:/\/}
     origin="https://$origin"
 else
     origin=${origin%.git}
