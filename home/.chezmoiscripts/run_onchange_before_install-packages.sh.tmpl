@@ -3,13 +3,15 @@
 set -eufo pipefail
 
 {{ $brews := list
+    "cargo-binstall"
     "chezmoi"
+    "gromgit/brewtils/taproom"
     "mise"
-    "starship"
 -}}
 
 {{ $casks := (list
     "font-iosevka"
+    "font-iosevka-nerd-font"
     "font-commit-mono"
     "ghostty@tip"
 ) -}}
@@ -17,9 +19,18 @@ set -eufo pipefail
 {{ if .work -}}
 {{ $brews = concat $brews (list
     "colima"
-    "direnv"
+    "crossplane"
+    "devtui"
+    "docker"
+    "docker-buildx"
+    "docker-completion"
+    "docker-compose"
+    "docker-credential-helper"
     "gnu-sed"
-    "moreutils"
+    "helm-ls"
+    "joemiller/taps/vault-token-helper"
+    "kubecolor"
+    "starship"
 ) -}}
 
 {{ $casks = concat $casks (list) -}}
