@@ -1,6 +1,9 @@
 [settings]
 experimental = true
 legacy_version_file = false
+{{- if .work }}
+trusted_config_paths = ["{{ .chezmoi.homeDir }}/workspace/{{ .my.work_git_forge }}/"]
+{{- end }}
 
 [settings.npm]
 bun = true
@@ -8,10 +11,6 @@ bun = true
 [settings.python]
 default_packages_file = "{{ .chezmoi.homeDir }}/.config/mise/default-python-packages"
 uv_venv_auto = true
-
-{{- if .work }}
-trusted_config_paths = ["{{ .chezmoi.homeDir }}/workspace/{{ .my.work_git_forge }}/"]
-{{- end }}
 
 [tools]
 cargo-binstall = "latest"
@@ -29,6 +28,7 @@ uv = "latest"
 amazon-ecr-credential-helper = "0.9.0"
 argocd = "latest"
 aws-cli = "latest"
+azure-cli = "latest"
 bun = "latest"
 dive = "latest"
 gcloud = "latest"
@@ -41,6 +41,7 @@ jq = "latest"
 k9s = "latest"
 kafkactl = "latest"
 kubectl = "latest"
+kubectx = "latest"
 kubent = "latest"
 pre-commit = "4.0.1"
 shellcheck = "latest"
@@ -56,4 +57,9 @@ viddy = "latest"
 
 {{- else }}
 elixir = "latest"
+{{- end }}
+
+{{- if .work }}
+[vars]
+srenity = "{{ .chezmoi.homeDir }}/workspace/{{ .my.work_git_forge }}/sre/srenity"
 {{- end }}
