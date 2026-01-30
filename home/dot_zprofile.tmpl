@@ -63,3 +63,7 @@ fpath=(
   $HOMEBREW_REPOSITORY/share/zsh/site-functions
   $fpath
 )
+
+{{- if stat (joinPath .chezmoi.homeDir ".zprofile.work") }}
+[[ -s "${HOME}/.zprofile.work" ]] && . "${HOME}/.zprofile.work"
+{{- end }}
