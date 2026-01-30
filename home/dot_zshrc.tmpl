@@ -36,7 +36,6 @@ function cache_eval() {
 
   if [[ ! -f "$cache_file" || "$check_file" -nt "$cache_file" ]]; then
     "$@" > "$cache_file"
-    echo :toto
   fi
   . "$cache_file"
 }
@@ -57,8 +56,6 @@ function cache_val() {
 
 # Load antidote and ZSH plugins
 zsh_plugins="${XDG_CONFIG_HOME}/zsh/zsh_plugins"
-# [[ -f ${zsh_plugins}.txt ]] || touch ${zsh_plugins}.txt
-
 fpath=("${HOME}/.antidote/functions" $fpath)
 autoload -Uz antidote
 
@@ -100,9 +97,14 @@ fi
 # zle     -N              edit-command-line
 # bindkey -M emacs "^X^E" edit-command-line
 
-if (( $+commands[direnv] )); then
-  . <(direnv hook zsh)
+if (( $+commands[starship] )); then
+  cache_eval starship.zsh "$(whence -p starship)" starship init zsh
 fi
 
-[[ -s "${HOME}/.config/zsh/work-aliases.sh" ]] && source "${HOME}/.config/zsh/work-aliases.sh"
+if (( $+commands[direnv] )); then
+  cache_eval direnv.zsh "$(whence -p direnv)" direnv hook zsh
+fi
+
+[[ -s "${XDG_CONFIG_HOME}/zsh/work-aliases.sh" ]] && . "${XDG_CONFIG_HOME}/zsh/work-aliases.sh"
+[[ -s "${XDG_CONFIG_HOME}/zsh/python-venv.sh" ]] && . "${XDG_CONFIG_HOME}/zsh/python-venv.sh"
 {{- end }}
