@@ -32,6 +32,7 @@
             delta
             devenv
             difftastic
+            direnv
             erlang
             eza
             fd
@@ -46,10 +47,13 @@
             nixd
             nixfmt
             nixpkgs-fmt
+            prek
             qmk
             rebar3
+            riffdiff
             ripgrep
             rustup
+            sd
             viddy
             vivid
             xh
@@ -57,10 +61,6 @@
             yazi
           ];
 
-          networking.applicationFirewall.enable = true;
-          networking.applicationFirewall.enableStealthMode = true;
-          networking.applicationFirewall.allowSigned = true;
-          networking.applicationFirewall.allowSignedApp = true;
           networking.computerName = "{{ .hostname }}";
           networking.hostName = "{{ .hostname }}";
 
