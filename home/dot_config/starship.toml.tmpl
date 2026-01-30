@@ -159,9 +159,9 @@ format = 'on [$branch]($style) '
 [kubernetes]
 disabled = false
 format = '[$symbol$context( \($namespace\))]($style) '
-contexts = [
-{{ onepasswordDocument "u2yslhmcoyijg2kdhrrilcu7nm" | nindent 4 }}
-]
+{{- if stat (joinPath .chezmoi.homeDir ".config/starship/starship_k8s_contexts") }}
+contexts = {{ include (joinPath .chezmoi.homeDir ".config/starship/starship_k8s_contexts") }}
+{{- end }}
 style = "purple"
 {{- end }}
 
