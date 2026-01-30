@@ -3,11 +3,10 @@
 [user]
   name = {{ printf "%s %s" $firstname $lastname | quote }}
   email = {{ .my.work_email | quote }}
-  signingkey = {{ (onepasswordDetailsFields "y36tqmojyxoqugz6gwyqxpmwbm").public_key.value | quote }}
+  signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJwd5oiB+wCRkRPyFVHRya4FHU4jfXBPGfBgKgcY4PtJ"
 [gpg]
   format = ssh
-[gpg "ssh"]
-  program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[gpg.ssh]
   allowedSignersFile = {{ .chezmoi.homeDir }}/.ssh/allowed_signers
 [commit]
   gpgsign = true

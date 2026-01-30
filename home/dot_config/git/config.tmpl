@@ -1,9 +1,15 @@
 [user]
   name = {{ .my.name | quote }}
   email = {{ .my.email | quote }}
+  signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILl9FIg0Q8i035WYSxD6vbW+VUMEc6DrwPWtVh+C/0zg"
+[gpg]
+  format = ssh
+[gpg.ssh]
+  allowedSignersFile = {{ .chezmoi.homeDir }}/.ssh/allowed_signers
+[commit]
+  gpgsign = true
 [github]
   user = flou
-
 [init]
   defaultBranch = main
 [core]
