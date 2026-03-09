@@ -23,6 +23,8 @@ mouse-hide-while-typing = false
 macos-titlebar-proxy-icon = hidden
 macos-titlebar-style = tabs
 macos-window-buttons = hidden
+macos-icon = custom
+macos-custom-icon = ~/.config/ghostty/catppuccin-mocha.icns
 
 keybind = cmd+arrow_right=next_tab
 keybind = cmd+arrow_left=previous_tab
