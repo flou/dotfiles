@@ -16,6 +16,7 @@ window-position-x = 10
 window-position-y = 10
 
 bell-features = border
+focus-follows-mouse = true
 
 macos-option-as-alt = right
 macos-non-native-fullscreen = padded-notch
