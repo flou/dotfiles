@@ -3,6 +3,12 @@
 
 format = "$username$hostname$localip$shlvl$directory$git_branch$helm$python$terraform$zig$nix_shell$aws$gcloud$direnv$kubernetes$sudo$cmd_duration$line_break$jobs$battery$status$shell$character"
 
+[custom.prompt_start]
+command = '''printf '\033]133;A\033\\''''
+format = '$output'
+when = true
+unsafe_no_escape = true
+
 [singularity]
 disabled = true
 [nats]
