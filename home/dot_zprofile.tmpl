@@ -41,6 +41,10 @@ export FZF_DEFAULT_OPTS="--bind alt-up:preview-page-up --bind alt-down:preview-p
 export FZF_CTRL_T_COMMAND='fd --type f --type d --hidden --follow --exclude .git --exclude .DS_Store --strip-cwd-prefix'
 export FZF_CTRL_T_OPTS="--walker-skip .git,node_modules,target --preview 'bat -n --color=always {}'"
 
+{{ if lookPath "pass-cli" -}}
+export SSH_AUTH_SOCK="${HOME}/.ssh/proton-pass-agent.sock"
+{{- end }}
+
 # typeset and export args:
 # -T: bind with a shell path variable
 # -U: ensure that entries are unique
