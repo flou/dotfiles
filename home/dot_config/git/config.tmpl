@@ -1,7 +1,11 @@
 [user]
   name = {{ .my.name | quote }}
   email = {{ .my.email | quote }}
+{{- if .work }}
   signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILl9FIg0Q8i035WYSxD6vbW+VUMEc6DrwPWtVh+C/0zg"
+{{- else }}
+  signingKey = {{ protonPass "pass://pS95VNeDHlEo-BWpVTdP_Ps1bZfFhAiiT8pguSpH_R8aiKpSPUYdfyjLo_cH_Haka8jIE0UGBMPj0qAiGoq5lw==/omYPRx2ZQkYu79bVIM4fTvAlz-qq2s0Xx-7-M2RXUYUvQ8t3fZlVegz-2hdPFcCL1AGJuZlj0_2KNQ7z_fTFOw==/Public key" | trim | quote }}
+{{- end }}
 [gpg]
   format = ssh
 [gpg.ssh]
