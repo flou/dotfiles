@@ -1,32 +1,35 @@
 confirmOnQuit: false
-quitOnTopLevelReturn: false
 disableStartupPopups: true
 notARepository: "skip"
 promptToReturnFromSubprocess: false
+quitOnTopLevelReturn: false
 gui:
-  # stuff relating to the UI
-  scrollHeight: 4 # how many lines you scroll by
-  scrollPastBottom: false # enable scrolling past the bottom
-  commitLength:
-    show: true
+  border: single 
+  # commitLength:
+  #   show: true
   mouseEvents: true
   nerdFontsVersion: "3"
-  skipDiscardChangeWarning: true
-  showFileTree: true
-  showCommandLog: false
+  scrollHeight: 4 # how many lines you scroll by
+  scrollPastBottom: false # enable scrolling past the bottom
   showBottomLine: false
+  showCommandLog: false
+  showFileTree: true
+  skipDiscardChangeWarning: true
+  branchColorPatterns:
+    "main": blue
   theme:
     selectedLineBgColor:
       - "#413660"
       # selectedRangeBgColor:
       #   - '#413660'
-refresher:
-  refreshInterval: 60
 git:
   autoFetch: false
+  skipHookPrefix: wip 
   pagers:
     - colorArg: always
       pager: delta --dark --paging=never
+refresher:
+  refreshInterval: 60
 update:
   method: never
 customCommands:
