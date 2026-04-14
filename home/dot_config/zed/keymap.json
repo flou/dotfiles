@@ -34,6 +34,7 @@
   {
     "context": "Editor",
     "bindings": {
+      "alt-escape": "workspace::ClearAllNotifications",
       "ctrl-|": "editor::ToggleGitBlameInline",
     },
   },
