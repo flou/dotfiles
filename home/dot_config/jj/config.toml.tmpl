@@ -25,6 +25,8 @@ sync = ['git', 'fetch', '--all-remotes']
 push = ['git', 'push', '-c', '@-']
 evolve = ['rebase', '--skip-emptied', '-d', 'main']
 tug = ["bookmark", "move", "--from", "heads(::@- & bookmarks())", "--to", "@-"]
+mr = ['git', 'push', '-c', '@-', '-o', 'merge_request.create']
+draft = ['git', 'push', '-c', '@-', '-o', 'merge_request.create', '-o', 'merge_request.draft']
 
 [colors]
 "commit_id prefix" = { bold = true }
@@ -32,6 +34,7 @@ tug = ["bookmark", "move", "--from", "heads(::@- & bookmarks())", "--to", "@-"]
 "diff added token" = { underline = false }
 
 [templates]
+git_push_bookmark = '"lou/" ++ change_id.short()'
 draft_commit_description = '''
 concat(
   coalesce(description, "\n"),
@@ -48,6 +51,13 @@ concat(
   diff.git(),
 )
 '''
+revert_description = '''
+concat(
+  'revert: ' ++ description.first_line() ++ "\n",
+  "\n",
+  "This reverts commit " ++ commit_id ++ ".\n",
+)
+'''
 
 [template-aliases]
 "format_timestamp(timestamp)" = "timestamp.ago()"
@@ -60,6 +70,7 @@ log = "present(@) | ancestors(immutable_heads().., 5) | present(trunk())"
 [[--scope]]
 --when.repositories = ["~/workspace/{{ .my.work_git_forge }}"]
 [--scope.user]
+name = "Lou FERRAND"
 email = {{ .my.work_email | quote }}
 
 [signing]
@@ -68,7 +79,8 @@ backend = "ssh"
 backends.ssh.program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 backends.ssh.allowed-signers = "{{ .chezmoi.homeDir }}/.ssh/allowed_signers"
 key = {{ (onepasswordDetailsFields "y36tqmojyxoqugz6gwyqxpmwbm").public_key.value | quote }}
+{{- end }}
 
 [git]
-push-bookmark-prefix = "lou/push-"
-{{- end }}
+# Prevent pushing work in progress or anything explicitly labeled "private"
+private-commits = "description(glob:'wip:*') | description(glob:'private:*')"
