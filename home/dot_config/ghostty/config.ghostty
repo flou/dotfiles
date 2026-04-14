@@ -6,6 +6,7 @@ window-theme = dark
 
 copy-on-select = clipboard
 quit-after-last-window-closed = true
+focus-follows-mouse = true
 
 split-inherit-working-directory = true
 tab-inherit-working-directory = false
