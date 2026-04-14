@@ -10,3 +10,7 @@ README.md
 .vault
 Library/Application Support/k9s
 {{- end }}
+
+{{ if lookPath "pass-cli" -}}
+{{ .chezmoi.homeDir }}/Library/LaunchAgents/com.proton.pass-cli.ssh-agent.plist
+{{- end }}
