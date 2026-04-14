@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/derailed/k9s/refs/heads/master/internal/config/json/schemas/k9s.json
 k9s:
   liveViewAutoRefresh: false
   screenDumpDir: {{ .chezmoi.homeDir }}/.local/state/k9s/screen-dumps
@@ -12,11 +13,11 @@ k9s:
     crumbsless: true
     noIcons: false
     reactive: true
-    skin: stock
+    skin: neofusion
   skipLatestRevCheck: false
   disablePodCounting: false
   shellPod:
-    image: busybox:1.35.0
+    image: busybox:1.37.0
     namespace: default
     limits:
       cpu: 100m
