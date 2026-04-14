@@ -165,11 +165,11 @@ format = 'on [$branch]($style) '
 [kubernetes]
 disabled = false
 format = '[$symbol$context( \($namespace\))]($style) '
+style = "purple"
 {{- if stat (joinPath .chezmoi.homeDir ".config/starship/starship_k8s_contexts") }}
 contexts = {{ include (joinPath .chezmoi.homeDir ".config/starship/starship_k8s_contexts") }}
-{{- end }}
-style = "purple"
-{{- end }}
+{{- end -}}
+{{- end -}}
 
 [python]
 format = '[$symbol:${pyenv_prefix}${version}( \($virtualenv\))]($style) '

@@ -4,7 +4,7 @@ notARepository: "skip"
 promptToReturnFromSubprocess: false
 quitOnTopLevelReturn: false
 gui:
-  border: single 
+  border: single
   # commitLength:
   #   show: true
   mouseEvents: true
@@ -24,7 +24,7 @@ gui:
       #   - '#413660'
 git:
   autoFetch: false
-  skipHookPrefix: wip 
+  skipHookPrefix: wip
   pagers:
     - colorArg: always
       pager: delta --dark --paging=never
@@ -38,3 +38,9 @@ customCommands:
     context: "global"
     loadingText: "Push and create Merge Request ..."
     command: git mr && glab mr view --web
+  - key: "G"
+    command: "glab mr view -w {{.SelectedLocalBranch.UpstreamBranch}}"
+    context: "localBranches"
+    description: "Go to MR in gitlab"
+os:
+  editPreset: zed

@@ -31,4 +31,10 @@
       "ctrl-e": "editor::MoveToEndOfLine",
     },
   },
+  {
+    "context": "Editor",
+    "bindings": {
+      "ctrl-|": "editor::ToggleGitBlameInline",
+    },
+  },
 ]
