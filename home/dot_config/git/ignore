@@ -196,3 +196,5 @@ node_modules/
 .zed/
 
 generic-*/**.tgz
+
+mise.local.toml
