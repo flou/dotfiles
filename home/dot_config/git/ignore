@@ -198,3 +198,4 @@ node_modules/
 generic-*/**.tgz
 
 mise.local.toml
+values-argocd.yaml

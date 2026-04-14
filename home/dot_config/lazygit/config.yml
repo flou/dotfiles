@@ -5,8 +5,8 @@ promptToReturnFromSubprocess: false
 quitOnTopLevelReturn: false
 gui:
   border: single
-  # commitLength:
-  #   show: true
+  commitLength:
+    show: true
   mouseEvents: true
   nerdFontsVersion: "3"
   scrollHeight: 4 # how many lines you scroll by
