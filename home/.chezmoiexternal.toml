@@ -1,3 +1,8 @@
+["workspace/github.com/flou/nixos-config"]
+    type = "archive"
+    url = "https://github.com/flou/nixos-config/archive/main.tar.gz"
+    stripComponents = 1
+    refreshPeriod = "168h"
 [".config/nvim"]
     type = "archive"
     url = "https://github.com/flou/nvim/archive/main.tar.gz"
