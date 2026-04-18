@@ -1,5 +1,5 @@
+# vim: set filetype=sh tabstop=2 softtabstop=2 shiftwidth=2
 # shellcheck shell=bash
-
 function venv() {
   if command -v uv >/dev/null 2>&1; then
     uv venv

@@ -1,5 +1,4 @@
-# Aliases
-
+# vim: set filetype=sh tabstop=2 softtabstop=2 shiftwidth=2
 alias path='echo -e ${PATH//:/\\n} | nl'
 
 alias cm=chezmoi
@@ -19,7 +18,7 @@ alias yz="yazi"
 
 alias -g C='| wc -l'
 
-if (( $+commands[bat] )); then
+if (($+commands[bat])); then
   alias cat='bat --style "header,plain"'
 fi
 
@@ -37,9 +36,4 @@ function copy() {
   if [[ -n "${1}" ]]; then
     pbcopy <"${1}"
   fi
-}
-
-function zsh-rebuild-cache() {
-  rm -rf "$ZSH_CACHE_DIR"
-  echo "ZSH cache cleared. Restart your shell to regenerate."
 }
