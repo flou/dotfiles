@@ -199,3 +199,5 @@ generic-*/**.tgz
 
 mise.local.toml
 values-argocd.yaml
+
+**/.claude/settings.local.json

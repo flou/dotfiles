@@ -10,5 +10,6 @@ README.md
 .vault
 Library/Application Support/k9s
 {{- else }}
+.config/zed/settings.json
 Library/LaunchAgents/com.proton.pass-cli.ssh-agent.plist
 {{- end }}

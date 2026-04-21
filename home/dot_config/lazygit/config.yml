@@ -25,6 +25,7 @@ gui:
 git:
   autoFetch: false
   skipHookPrefix: wip
+  overrideGpg: true
   pagers:
     - colorArg: always
       pager: delta --dark --paging=never
