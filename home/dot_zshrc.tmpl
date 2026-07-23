@@ -73,3 +73,7 @@ fi
 [[ -s "${XDG_CONFIG_HOME}/zsh/work-aliases.sh" ]] && . "${XDG_CONFIG_HOME}/zsh/work-aliases.sh"
 [[ -s "${XDG_CONFIG_HOME}/zsh/python-venv.sh" ]] && . "${XDG_CONFIG_HOME}/zsh/python-venv.sh"
 {{- end }}
+
+if (($+commands[zsh-patina])); then
+  . <(zsh-patina activate)
+fi
