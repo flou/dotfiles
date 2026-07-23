@@ -33,8 +33,6 @@ argocd = "latest"
 aws-cli = "latest"
 bun = "latest"
 claude-code = "latest"
-dive = "latest"
-gitleaks = "8.21.2"
 hadolint = "latest"
 helm = "latest"
 helm-diff = "latest"
@@ -47,16 +45,12 @@ shellcheck = "latest"
 stern = "latest"
 tflint = "latest"
 vault = "1.18.2"
-viddy = "latest"
+yq = "latest"
 "cargo:proc-cli" = "latest"
 "go:github.com/deveshctl/layerx" = "latest"
-"vfox:flou/vfox-gcloud" = "576.0.0"
+"go:github.com/janosmiko/lfk" = "latest"
+"vfox:flou/vfox-gcloud" = "577.0.0"
 
 {{- else }}
 elixir = "latest"
-{{- end }}
-
-{{- if .work }}
-[vars]
-srenity = "{{ .chezmoi.homeDir }}/workspace/{{ .my.work_git_forge }}/sre/srenity"
 {{- end }}
