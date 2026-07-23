@@ -8,3 +8,8 @@ hotKeys:
     shortCut: Shift-1
     description: View deployments
     command: deployments
+
+  shift-2:
+    shortCut: Shift-2
+    description: View cronjobs
+    command: cronjobs
