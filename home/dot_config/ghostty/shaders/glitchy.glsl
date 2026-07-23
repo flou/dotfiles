@@ -112,10 +112,8 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     }
 
     // white noise + scanlines - much more subtle
-    displayNoise = 0.1 * clamp(displayNoise, 0., 1.);
-    col += (.05 + .2 * glitchAmount) * (hash33(vec3(fragCoord, mod(float(iFrame),
-					1000.))).r) * displayNoise;
-    col -= (.1 + .3 * glitchAmount) * (sin(4. * t + uv.y * iResolution.y * 1.75))
-					* displayNoise;
+    // displayNoise = 0.1 * clamp(displayNoise, 0., 1.);
+    // col += (.05 + .2 * glitchAmount) * (hash33(vec3(fragCoord, mod(float(iFrame), 1000.))).r) * displayNoise;
+    // col -= (.1 + .3 * glitchAmount) * (sin(4. * t + uv.y * iResolution.y * 1.75)) * displayNoise;
     fragColor = vec4(col, 1.0);
 }
