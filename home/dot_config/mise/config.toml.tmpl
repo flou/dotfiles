@@ -2,6 +2,7 @@
 experimental = true
 legacy_version_file = false
 disable_backends = ["asdf"]
+minimum_release_age = "0s"
 {{- if .work }}
 trusted_config_paths = [
   "{{ .chezmoi.homeDir }}/workspace/{{ .my.work_git_forge }}/",
@@ -16,23 +17,22 @@ default_packages_file = "{{ .chezmoi.homeDir }}/.config/mise/default-python-pack
 uv_venv_auto = true
 
 [tools]
+aube = "latest"
 cargo-binstall = "latest"
 go = "latest"
 just = "latest"
 node = "latest"
 python = "latest"
-ruff = "latest"
-ty = "latest"
 usage = "latest"
 uv = "latest"
 "pipx:pxpx" = "latest"
-"pipx:ruff-lsp" = "latest"
 
 {{- if .work }}
+"cargo:proc-cli" = "latest"
 argocd = "latest"
 aws-cli = "latest"
-bun = "latest"
 claude-code = "latest"
+gcloud = "584.0.0"
 hadolint = "latest"
 helm = "latest"
 helm-diff = "latest"
@@ -45,12 +45,6 @@ shellcheck = "latest"
 stern = "latest"
 tflint = "latest"
 vault = "1.18.2"
+viddy = "latest"
 yq = "latest"
-"cargo:proc-cli" = "latest"
-"go:github.com/deveshctl/layerx" = "latest"
-"go:github.com/janosmiko/lfk" = "latest"
-"vfox:flou/vfox-gcloud" = "577.0.0"
-
-{{- else }}
-elixir = "latest"
 {{- end }}
