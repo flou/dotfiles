@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/jesseduffield/lazygit/refs/heads/master/schema/config.json
 confirmOnQuit: false
 disableStartupPopups: true
 notARepository: "skip"
@@ -26,9 +27,9 @@ git:
   autoFetch: false
   skipHookPrefix: wip
   overrideGpg: true
-  pagers:
+  diffRenderers:
     - colorArg: always
-      pager: delta --dark --paging=never
+      command: delta --dark --paging=never
 refresher:
   refreshInterval: 60
 update:
