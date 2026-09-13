@@ -28,6 +28,7 @@ evolve = ['rebase', '--skip-emptied', '-d', 'main']
 tug = ["bookmark", "move", "--from", "heads(::@- & bookmarks())", "--to", "@-"]
 mr = ['git', 'push', '-c', '@-', '-o', 'merge_request.create']
 draft = ['git', 'push', '-c', '@-', '-o', 'merge_request.create', '-o', 'merge_request.draft']
+start = ["util", "exec", "--", "sh", "-c", "jj git fetch && jj new 'trunk()'"]
 
 [colors]
 "commit_id prefix" = { bold = true }
@@ -66,6 +67,9 @@ concat(
 
 [revsets]
 log = "present(@) | ancestors(immutable_heads().., 5) | present(trunk())"
+
+[revset-aliases]
+trunk = "main@origin"
 
 {{- if .work }}
 [[--scope]]
