@@ -201,3 +201,6 @@ mise.local.toml
 values-argocd.yaml
 
 **/.claude/settings.local.json
+.claude/worktrees
+.beads/
+.beads.gate.lock
