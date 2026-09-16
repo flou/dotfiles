@@ -5,7 +5,7 @@ notARepository: "skip"
 promptToReturnFromSubprocess: false
 quitOnTopLevelReturn: false
 gui:
-  border: single
+  border: rounded
   commitLength:
     show: true
   mouseEvents: true
@@ -18,6 +18,16 @@ gui:
   skipDiscardChangeWarning: true
   branchColorPatterns:
     "main": blue
+  spinner:
+    frames:
+      - "⣶"
+      - "⣧"
+      - "⣏"
+      - "⡟"
+      - "⠿"
+      - "⢻"
+      - "⣹"
+      - "⣼"
   theme:
     selectedLineBgColor:
       - "#413660"
@@ -28,8 +38,9 @@ git:
   skipHookPrefix: wip
   overrideGpg: true
   diffRenderers:
-    - colorArg: always
-      command: delta --dark --paging=never
+    - command: delta --dark --paging=never
+    - type: rawGit
+      name: default
 refresher:
   refreshInterval: 60
 update:
@@ -44,5 +55,6 @@ customCommands:
     command: "glab mr view -w {{.SelectedLocalBranch.UpstreamBranch}}"
     context: "localBranches"
     description: "Go to MR in gitlab"
+    output: log
 os:
   editPreset: zed
