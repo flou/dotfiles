@@ -24,6 +24,6 @@ fzf-ghq-widget() {
   return $ret
 }
 
-# ALT-S - cd into the selected git project
+# ALT-G - cd into the selected git project
 zle     -N             fzf-ghq-widget
 bindkey -M emacs '\eg' fzf-ghq-widget
