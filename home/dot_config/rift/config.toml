@@ -1,8 +1,8 @@
 [settings]
-animate = false
-animation_duration = 0.1
+animate = true
+animation_duration = 0.2
 animation_fps = 100.0
-animation_easing = "ease_in_out"
+# animation_easing = "ease_in_out"
 
 default_disable = false
 
@@ -67,7 +67,7 @@ fingers = 3
 propagate_to_workspace_swipe = false
 
 [settings.layout.stack]
-stack_offset = 20.0
+stack_offset = 30.0
 default_orientation = "perpendicular"
 
 [settings.layout.gaps]
@@ -78,8 +78,8 @@ bottom = 0
 right = 0
 
 [settings.layout.gaps.inner]
-horizontal = 8
-vertical = 8
+horizontal = 4
+vertical = 4
 
 [settings.ui.menu_bar]
 enabled = true
@@ -88,32 +88,46 @@ mode = "all"
 active_label = "name"
 display_style = "label"
 
-[settings.ui.stack_line]
+[settings.ui.mission_control]
 enabled = false
+
+[settings.ui.stack_line]
+enabled = true
+hover = "hover"
 horiz_placement = "top"
 vert_placement = "left"
 thickness = 20.0
 spacing = 1.0
 
-[settings.ui.mission_control]
-enabled = false
-fade_enabled = false
-fade_duration_ms = 180.0
-
 # Trackpad gestures
 [settings.gestures]
 enabled = true
+consume_dock_swipe = true
 invert_horizontal_swipe = false
 swipe_vertical_tolerance = 0.4
 skip_empty = true
 fingers = 3
 distance_pct = 0.08
 haptics_enabled = true
-haptic_pattern = "level_change"
 
-# Window snapping / drag-swap behavior
-[settings.window_snapping]
-drag_swap_fraction = 0.3
+# Mouse move and tiled-window drop behavior
+[settings.drag_drop]
+# Disable to leave all mouse gestures entirely to macOS and applications.
+enabled = true
+# Modifier used with action1/action2: cmd | alt | shift | ctrl | fn.
+modifier = "fn"
+# Left-button and right-button actions: move.
+# With the modifier held, the action works from anywhere inside a managed window.
+action1 = "move"
+# Dropping in the center of another tiled window: swap | stack.
+# Dropping near an edge of another tiled window inserts on that side.
+# Dropping near an edge of the dragged window's vacated tile moves it one step, like move_node,
+# toward sides with no window to drop onto. An edge that would put it back in place acts like the center.
+drop_action = "swap"
+# Edge-zone depth. Must be between 0.10 and 0.45; 0.25 leaves a 50% x 50% center.
+drop_zone_fraction = 0.25
+# Show drop-intent feedback when preview rendering is available.
+preview = true
 
 [virtual_workspaces]
 enabled = true
@@ -243,5 +257,5 @@ comb1 = "Alt + Shift"
 "Alt + Tab" = "switch_to_last_workspace"
 
 "Alt + F" = "toggle_fullscreen"
-"Alt + Shift + Space" = "toggle_window_floating"
+"Alt + Shift + F" = "toggle_fullscreen_within_gaps"
 "comb1 + Ctrl + Space" = "toggle_focus_floating" # briefly bring focus to floating window
