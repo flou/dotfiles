@@ -8,3 +8,12 @@ rex.bind("shift+cmd+left", "client.tab.move.backward")
 
 -- Split: `cmd+d=new_split:auto`
 rex.bind("cmd+d", "pane.split.auto")
+
+rex.bind("shift+cmd+r", "client.config.reload")
+rex.bind("shift+enter", "com.superlogical.terminal.write", { data = "\27\r" })
+rex.bind("cmd+k", "com.superlogical.terminal.clear")
+
+local function ignore()
+    return true
+end
+rex.bind("cmd+enter", ignore)

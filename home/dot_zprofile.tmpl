@@ -34,6 +34,8 @@ export LESSHISTFILE="${XDG_CACHE_HOME}/lesshst"
 
 export SHELL_SESSIONS_DISABLE=1 # Make Apple Terminal behave.
 
+export REX_BIN_DIR='/Applications/Rex Beta.app/Contents/Helpers/Rex Server.rex/Contents/MacOS'
+
 # Python: Don't write .pyc files
 export PYTHONDONTWRITEBYTECODE=1
 
@@ -61,6 +63,7 @@ path=(
   $HOME/.cargo/bin
   $GOPATH/bin
   $HOME/.local/bin
+  $REX_BIN_DIR
   '/Applications/Ghostty.app/Contents/MacOS'
   $HOMEBREW_REPOSITORY/opt/gnu-sed/libexec/gnubin
   $HOMEBREW_REPOSITORY/{,s}bin
