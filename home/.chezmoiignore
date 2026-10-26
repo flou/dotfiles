@@ -5,6 +5,7 @@ README.md
 .config/git/config.work
 .config/k9s
 .config/gcloud
+.config/sofka
 .config/starship.toml
 .config/kitty
 .ssh/config.work
