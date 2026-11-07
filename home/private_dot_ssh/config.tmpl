@@ -12,3 +12,6 @@ Include ~/.ssh/config.work
 {{- if stat (joinPath .chezmoi.homeDir ".orbstack/ssh/config") }}
 Include ~/.orbstack/ssh/config
 {{- end }}
+
+# Added by "rex terminfo setup". Remove it with "rex terminfo remove".
+Include "{{ .chezmoi.homeDir }}/.config/rex/ssh_config"
