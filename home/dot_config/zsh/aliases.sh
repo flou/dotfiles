@@ -2,8 +2,10 @@
 alias path='echo -e ${PATH//:/\\n} | nl'
 
 alias cm=chezmoi
-alias curl="noglob curlie"
-alias curlie="noglob curlie"
+if (($+commands[curlie])); then
+  alias curl="noglob curlie"
+  alias curlie="noglob curlie"
+fi
 alias df="df -h"
 alias du="du -h"
 alias fd="noglob fd"

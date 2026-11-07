@@ -1,3 +1,4 @@
+romkatv/zsh-defer
 mattmc3/zephyr path:plugins/completion
-zsh-users/zsh-autosuggestions kind:defer
-zsh-users/zsh-history-substring-search kind:defer
+zsh-users/zsh-history-substring-search
+zsh-users/zsh-autosuggestions

@@ -8,7 +8,6 @@ export HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=yellow,fg=black,bold'
 export HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=red,fg=black,bold'
 
 export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
 
 export WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
 export MANPAGER="sh -c 'col -bx | bat --language man --style plain'"
@@ -17,8 +16,8 @@ export MANPAGER="sh -c 'col -bx | bat --language man --style plain'"
 export HOMEBREW_PREFIX="/opt/homebrew"
 export HOMEBREW_REPOSITORY="/opt/homebrew"
 export HOMEBREW_CELLAR="${HOMEBREW_REPOSITORY}/Cellar"
-export MANPATH="${HOMEBREW_REPOSITORY}/share/man${MANPATH+:$MANPATH}:"
-export INFOPATH="${HOMEBREW_REPOSITORY}/share/info:${INFOPATH:-}"
+export MANPATH="${HOMEBREW_REPOSITORY}/share/man${MANPATH:+:$MANPATH}"
+export INFOPATH="${HOMEBREW_REPOSITORY}/share/info${INFOPATH:+:$INFOPATH}"
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_ENV_HINTS=1
 
@@ -51,13 +50,14 @@ export CLOUDSDK_PYTHON="${XDG_DATA_HOME}/mise/installs/python/latest/bin/python"
 {{- end }}
 
 {{ if lookPath "pass-cli" -}}
-export SSH_AUTH_SOCK="${HOME}/.ssh/proton-pass-agent.sock"
+[[ -S "${HOME}/.ssh/proton-pass-agent.sock" ]] &&
+  export SSH_AUTH_SOCK="${HOME}/.ssh/proton-pass-agent.sock"
 {{- end }}
 
 # typeset and export args:
 # -T: bind with a shell path variable
 # -U: ensure that entries are unique
-typeset -gU fpath path cdpath
+# (fpath is set in ~/.zshenv so login and non-login shells agree.)
 
 path=(
   $HOME/.cargo/bin
@@ -68,14 +68,19 @@ path=(
   $HOMEBREW_REPOSITORY/opt/gnu-sed/libexec/gnubin
   $HOMEBREW_REPOSITORY/{,s}bin
   /usr/local/{bin,sbin}
+  # /etc/paths (path_helper no longer runs)
+  /System/Cryptexes/App/usr/bin
+  /usr/bin
+  /bin
+  /usr/sbin
+  /sbin
+  # /etc/paths.d
+  /var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin
+  /var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin
+  /var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin
+  /pkg/env/global/bin
+  /Library/Apple/usr/bin
   $path
-)
-
-fpath=(
-  $HOME/.local/share/zsh/site-functions
-  /Applications/Ghostty.app/Contents/Resources/zsh/site-functions
-  $HOMEBREW_REPOSITORY/share/zsh/site-functions
-  $fpath
 )
 
 {{- if stat (joinPath .chezmoi.homeDir ".zprofile.work") }}

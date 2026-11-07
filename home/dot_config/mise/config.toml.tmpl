@@ -13,8 +13,10 @@ trusted_config_paths = [
 bun = true
 
 [settings.python]
-default_packages_file = "{{ .chezmoi.homeDir }}/.config/mise/default-python-packages"
 uv_venv_auto = true
+
+[settings.self_update]
+auto = true
 
 [tools]
 aube = "latest"
@@ -26,6 +28,22 @@ python = "latest"
 usage = "latest"
 uv = "latest"
 "pypi:pxpx" = "latest"
+bun = "latest"
+opencode = { version = "latest", allow_builds = ["@opencode/cli"] }
+
+[bootstrap.services.mise-history]
+builtin = "history-watch"
+
+[dotfiles]
+"~/.config/ghostty/config.ghostty" = { mode = "track" }
+"~/.config/lazygit/config.yml" = { mode = "track" }
+"~/.zprofile" = { mode = "track" }
+"~/.zshenv" = { mode = "track" }
+"~/.zshrc" = { mode = "track" }
+
+[history]
+exclude = [".DS_Store"]
+
 
 {{- if .work }}
 "cargo:proc-cli" = "latest"

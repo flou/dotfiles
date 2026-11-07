@@ -1,5 +1,5 @@
 # vim: set filetype=sh tabstop=2 softtabstop=2 shiftwidth=2
-# shellcheck shell=bash
+# shellcheck shell=zsh
 function venv() {
   if command -v uv >/dev/null 2>&1; then
     uv venv
@@ -12,12 +12,11 @@ function venv() {
 }
 
 function _python-workon-cwd {
-  # Check if this is a Git repo.
-  local GIT_REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
-
-  # Get absolute path, resolving symlinks.
+  # Walk up from the current directory looking for a .venv, stopping at the
+  # repository root (a .git directory or file, which covers worktrees and
+  # submodules). This avoids forking `git rev-parse` on every cd.
   local PROJECT_ROOT="$PWD:A"
-  while [[ "$PROJECT_ROOT" != "/" && ! -e "$PROJECT_ROOT/.venv" && ! -d "$PROJECT_ROOT/.git" && "$PROJECT_ROOT" != "$GIT_REPO_ROOT" ]]; do
+  while [[ "$PROJECT_ROOT" != "/" && ! -e "$PROJECT_ROOT/.venv" && ! -e "$PROJECT_ROOT/.git" ]]; do
     PROJECT_ROOT="$PROJECT_ROOT:h"
   done
   if [[ $PROJECT_ROOT == "/" ]]; then
@@ -37,7 +36,8 @@ function _python-workon-cwd {
   if [[ -n $CD_VIRTUAL_ENV && "$ENV_NAME" != "$CD_VIRTUAL_ENV" ]]; then
     # We've just left the repo, deactivate the environment.
     # Note: this only happens if the virtualenv was activated automatically.
-    deactivate && unset CD_VIRTUAL_ENV
+    (( $+functions[deactivate] )) && deactivate
+    unset CD_VIRTUAL_ENV
   fi
 
   if [[ $ENV_NAME != "" ]]; then
@@ -46,7 +46,7 @@ function _python-workon-cwd {
       if [[ -n "$WORKON_HOME" && -e "$WORKON_HOME/$ENV_NAME/bin/activate" ]]; then
         workon "$ENV_NAME" && export CD_VIRTUAL_ENV="$ENV_NAME"
       elif [[ -e "$ENV_NAME/bin/activate" ]]; then
-        source $ENV_NAME/bin/activate && export CD_VIRTUAL_ENV="$ENV_NAME"
+        source "$ENV_NAME/bin/activate" && export CD_VIRTUAL_ENV="$ENV_NAME"
       fi
     fi
   fi

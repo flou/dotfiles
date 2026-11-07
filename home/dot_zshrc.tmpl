@@ -2,9 +2,6 @@
 
 # OSC 133 semantic prompt markers (FinalTerm shell integration):
 #   A = prompt start, B = user input start, C = command started, D = command done.
-# Terminals that understand them (Rex, Ghostty, iTerm2, Kitty, WezTerm, ...) can
-# jump between prompts/commands and track exit status. Ghostty injects the same
-# marks itself from its .zshenv, so only add ours when that is not active.
 if (( ! $+_ghostty_state )); then
   typeset -gi _osc133_running=0
 
@@ -15,19 +12,24 @@ if (( ! $+_ghostty_state )); then
 
   _osc133_precmd() {
     local -i exit_code=$?
-    (( _osc133_running )) || return 0
-    # Don't emit D when precmd is invoked from zle (e.g. prompt refresh).
+    # Don't emit anything when precmd is invoked from zle (e.g. prompt refresh)
     if zle; then return 0; fi
-    _osc133_running=0
-    printf '\e]133;D;%d\a' "$exit_code"
+    if (( _osc133_running )); then
+      _osc133_running=0
+      printf '\e]133;D;%d\a' "$exit_code"
+    fi
+    # Blank line between command output and prompt. Emitted here rather than
+    # via starship's add_newline so the OSC 133 A mark starts the prompt line
+    # instead of the empty line above it.
+    print
   }
 
   preexec_functions=(_osc133_preexec ${preexec_functions:#_osc133_preexec})
   precmd_functions=(_osc133_precmd ${precmd_functions:#_osc133_precmd})
 
-  export PROMPT=$'%{\e]133;A\a%}%F{yellow}%~%f %{\e]133;B\a%}'
+  PROMPT=$'%{\e]133;A\a%}%F{yellow}%~%f %{\e]133;B\a%}'
 else
-  export PROMPT='%F{yellow}%~%f '
+  PROMPT='%F{yellow}%~%f '
 fi
 
 setopt autocd
@@ -42,14 +44,20 @@ setopt hist_ignore_space       # Do not record an event starting with a space.
 setopt hist_reduce_blanks      # Remove extra blanks from commands added to the history list.
 setopt hist_save_no_dups       # Do not write a duplicate event to the history file.
 setopt hist_verify             # Do not execute immediately upon history expansion.
-setopt inc_append_history      # Write to the history file immediately, not when the shell exits.
-setopt share_history           # Share history between all sessions.
+setopt share_history           # Share history between sessions (implies inc_append_history).
 setopt NO_hist_beep            # Don't beep when accessing non-existent history.
+setopt hist_fcntl_lock         # /etc/zshrc set this; keep concurrent shells safe.
 
-HISTCONTROL=ignoredups:erasedups
+# /etc/zshrc used to set this. Needed because widgets.sh uses the emacs keymap.
+bindkey -e
+KEYTIMEOUT=1 # default 40 = 400ms; alt-h/alt-w/alt-g feel laggy
+
 HISTFILE="${XDG_DATA_HOME}/zsh/history"
-HISTSIZE=1000000
-SAVEHIST=1000000
+[[ -d "${HISTFILE:h}" ]] || mkdir -p "${HISTFILE:h}"
+# With share_history every shell reads this file at startup, so a very large
+# HISTSIZE directly costs prompt latency. 100k is ~months of use.
+HISTSIZE=100000
+SAVEHIST=100000
 HISTORY_IGNORE="(ls|l|cd|pwd|exit|cd ..|..)"
 
 # Load antidote and ZSH plugins
@@ -57,52 +65,110 @@ zsh_plugins="${XDG_CONFIG_HOME}/zsh/zsh_plugins"
 fpath=("${HOME}/.antidote/functions" $fpath)
 autoload -Uz antidote
 
-# Generate a new static file whenever .zsh_plugins.txt is updated.
-if [[ ! "${zsh_plugins}.zsh" -nt "${zsh_plugins}.txt" ]]; then
-  antidote bundle < "${zsh_plugins}.txt" >| "${zsh_plugins}.zsh"
-fi
-source ${zsh_plugins}.zsh
+zstyle ':zephyr:plugin:completion' use-cache yes
 
+# Generate a new static file whenever .zsh_plugins.txt is updated. Write to a
+# temp file first so a failed antidote run cannot truncate the existing bundle.
+if [[ ! "${zsh_plugins}.zsh" -nt "${zsh_plugins}.txt" ]]; then
+  tmp="${zsh_plugins}.zsh.tmp.$$"
+  if antidote bundle < "${zsh_plugins}.txt" >| "${tmp}"; then
+    mv "${tmp}" "${zsh_plugins}.zsh"
+  else
+    rm -f "${tmp}"
+  fi
+fi
+source "${zsh_plugins}.zsh"
+
+# Aliases, widgets, work helpers, eza aliases and the venv hook are cheap and
+# needed by the first command
+source "${XDG_CONFIG_HOME}/zsh/aliases.sh"
+if [[ -r "${XDG_CONFIG_HOME}/zsh/work-aliases.sh" ]]; then
+  source "${XDG_CONFIG_HOME}/zsh/work-aliases.sh"
+fi
+source "${XDG_CONFIG_HOME}/zsh/widgets.sh"
 if (($+commands[eza])); then
-  ezargs="--ignore-glob='$(awk '{$1=$1} NF{printf "%s|", $0}' "${XDG_CONFIG_HOME}/eza/ignore" | sed 's/|$//')' --group-directories-first"
-  alias ls="eza -a -s type $ezargs"
-  alias l="eza -la -s type $ezargs"
-  alias tree="eza -lT --hyperlink $ezargs"
+  source "${XDG_CONFIG_HOME}/zsh/eza.sh"
+fi
+if [[ -r "${XDG_CONFIG_HOME}/zsh/python-venv.sh" ]]; then
+  source "${XDG_CONFIG_HOME}/zsh/python-venv.sh"
+fi
+
+# mise must be active before the first command so its tools are on PATH
+if (($+commands[mise])); then
+  zsh-defer -12p -c '. <(mise activate zsh)'
 fi
 
 if (($+commands[fzf])); then
-  . <(fzf --zsh)
-  . "${XDG_CONFIG_HOME}/fzf/ghq.sh"
-fi
-
-if (($+commands[mise])); then
-  . <(mise activate zsh)
+  zsh-defer -12dmp -t 0.05 -c '. <(fzf --zsh)'
+  zsh-defer -12dmp -c '. "${XDG_CONFIG_HOME}/fzf/ghq.sh"'
 fi
 
 if (($+commands[vivid])); then
-  export LS_COLORS="$(vivid generate molokai)"
+  zsh-defer -12dmp -c 'export LS_COLORS="$(vivid generate molokai)"'
 fi
 
-. "${XDG_CONFIG_HOME}/zsh/aliases.sh"
-. "${XDG_CONFIG_HOME}/zsh/widgets.sh"
-
-{{- if .work }}
 # autoload -z edit-command-line
 # zle     -N              edit-command-line
 # bindkey -M emacs "^X^E" edit-command-line
 
+# Cache a static init script, keyed by the resolved binary path and its mtime.
+# Returns non-zero when the cache could not be (re)generated, so the caller can
+# fall back to running the command directly.
+_zsh_cache_init() {
+  local bin=$commands[$1] file=$2 sig
+  shift 2
+  [[ -s $file ]] && read -r sig < $file
+  if [[ $sig != "# $bin" || $bin -nt $file ]]; then
+    mkdir -p "$file:h"
+    if { print -r -- "# $bin"; "$bin" "$@" } >| "$file.tmp.$$" \
+      && mv "$file.tmp.$$" "$file"; then
+      :
+    else
+      rm -f "$file.tmp.$$"
+      return 1
+    fi
+  fi
+  source "$file"
+}
+
 if (($+commands[starship])); then
-  . <(starship init zsh)
+  if ! _zsh_cache_init starship "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/starship.zsh" init zsh; then
+    eval "$($commands[starship] init zsh)"
+  fi
+
+  # Hardcode the continuation prompt (starship's is a fixed grey bullet) instead
+  # of forking `starship prompt --continuation` and caching the result. Caching
+  # it keyed on the binary would also go stale whenever starship.toml changes.
+  PROMPT2='%F{240}∙%f '
+
+  STARSHIP_SESSION_KEY="${RANDOM}${RANDOM}${RANDOM}${RANDOM}${RANDOM}0000000000000000"
+  export STARSHIP_SESSION_KEY="${STARSHIP_SESSION_KEY:0:16}"
+
+  if (( ! $+_ghostty_state )); then
+    PROMPT=$'%{\e]133;A\a%}'"$PROMPT"$'%{\e]133;B\a%}'
+  fi
 fi
 
 if (($+commands[direnv])); then
-  . <(direnv hook zsh)
+  if ! _zsh_cache_init direnv "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/direnv.zsh" hook zsh; then
+    eval "$($commands[direnv] hook zsh)"
+  fi
+
+  if (( $+functions[_direnv_hook] && ! $+functions[_direnv_hook_orig] )); then
+    functions[_direnv_hook_orig]=$functions[_direnv_hook]
+    _direnv_hook() {
+      setopt localoptions localtraps
+      [[ -o interactive && $ZSH_SUBSHELL -eq 0 ]] || return 0
+      if [[ -z $DIRENV_DIFF ]]; then
+        local dir=$PWD
+        while [[ $dir != / && ! -e $dir/.envrc ]]; do dir=${dir:h}; done
+        [[ $dir == / && ! -e /.envrc ]] && return 0
+      fi
+      _direnv_hook_orig
+    }
+  fi
 fi
 
-[[ -s "${XDG_CONFIG_HOME}/zsh/work-aliases.sh" ]] && . "${XDG_CONFIG_HOME}/zsh/work-aliases.sh"
-[[ -s "${XDG_CONFIG_HOME}/zsh/python-venv.sh" ]] && . "${XDG_CONFIG_HOME}/zsh/python-venv.sh"
-{{- end }}
-
 if (($+commands[zsh-patina])); then
-  . <(zsh-patina activate)
+  zsh-defer -12dmp -c '. <(zsh-patina activate)'
 fi

@@ -1,5 +1,6 @@
 # vim: set filetype=sh tabstop=2 softtabstop=2 shiftwidth=2
 function git-log-widget() {
+  zle -I
   git lg
   zle reset-prompt
 }
@@ -8,7 +9,7 @@ bindkey -M emacs '\eh' git-log-widget
 
 function open-cwd-zed-widget() {
   if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    local git_root=$(git rev-parse --show-toplevel)
+    local git_root="$(git rev-parse --show-toplevel)"
     zed "${git_root}"
   else
     zed .
