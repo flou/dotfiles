@@ -16,8 +16,6 @@ gui:
   showCommandLog: false
   showFileTree: true
   skipDiscardChangeWarning: true
-  branchColorPatterns:
-    "main": blue
   spinner:
     frames:
       - "⣶"
@@ -33,6 +31,8 @@ gui:
       - "#413660"
       # selectedRangeBgColor:
       #   - '#413660'
+    branchColorPatterns:
+      "main": blue
 git:
   autoFetch: false
   skipHookPrefix: wip
