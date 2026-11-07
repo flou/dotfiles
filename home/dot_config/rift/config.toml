@@ -16,6 +16,7 @@ auto_focus_blacklist = [
   "com.apple.SecurityAgent",
   "com.apple.Spotlight",
   "com.raycast.macos",
+  "org.m0k.transmission",
 ]
 
 # Run commands on start
@@ -214,6 +215,7 @@ workspace_names = ['一', '二', '三', '四', '五', '六', '七', '八', '九'
 app_rules = [
   # Floating
   { app_id = "com.apple.systempreferences", floating = true },
+  { app_id = "org.m0k.transmission", floating = true },
 
   # Chat
   { app_id = "com.apple.MobileSMS", workspace = "󰭹 Chat" },
@@ -257,5 +259,5 @@ comb1 = "Alt + Shift"
 "Alt + Tab" = "switch_to_last_workspace"
 
 "Alt + F" = "toggle_fullscreen"
-"Alt + Shift + F" = "toggle_fullscreen_within_gaps"
+"Alt + Shift + Space" = "toggle_window_floating"
 "comb1 + Ctrl + Space" = "toggle_focus_floating" # briefly bring focus to floating window
