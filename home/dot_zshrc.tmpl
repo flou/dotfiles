@@ -112,17 +112,61 @@ source "${XDG_CONFIG_HOME}/zsh/widgets.sh"
 if (($+commands[eza])); then
   source "${XDG_CONFIG_HOME}/zsh/eza.sh"
 fi
-if [[ -r "${XDG_CONFIG_HOME}/zsh/python-venv.sh" ]]; then
-  source "${XDG_CONFIG_HOME}/zsh/python-venv.sh"
-fi
+# Disabled while testing mise's python.uv_venv_auto (see
+# ~/.config/mise/config.toml). Re-enable this block and set uv_venv_auto = false
+# to switch back to the chpwd-based hook.
+# if [[ -r "${XDG_CONFIG_HOME}/zsh/python-venv.sh" ]]; then
+#   source "${XDG_CONFIG_HOME}/zsh/python-venv.sh"
+# fi
 
-# mise tools are on PATH via ~/.local/share/mise/shims (set in ~/.zprofile), so
-# interactive, login, `zsh -c` and GUI-launched shells all resolve the same
-# versions. --shims installs no precmd/chpwd hook, so there is no `mise
-# hook-env` fork on every prompt; per-project versions still work through the
-# shims. The deferred call is only a safety net for PATH setup.
+# mise's shims (in ~/.zprofile) cover tool paths, but python.uv_venv_auto and
+# per-project [env] only apply in a hook-activated shell, so activate for real.
+# mise's precmd hook forks `mise hook-env` (~19ms here) on every prompt, so drop
+# it; the chpwd hook and the initial `_mise_hook --force` in the activate script
+# cover dir changes and shell start.
+#
+# Activation costs ~40ms (fork for `mise activate`, fork for its initial hook,
+# plus venv detection), so only pay it up front when the shell starts inside a
+# project; a deferred activation would otherwise race the first command.
+_zsh_mise_project_root() {
+  # REPLY = nearest directory with a uv.lock/mise.toml, empty if none.
+  local d=$PWD
+  while [[ $d != / && ! -e $d/uv.lock && ! -e $d/mise.toml && ! -e $d/.mise.toml ]]; do
+    d=${d:h}
+  done
+  [[ $d == / ]] && { REPLY=; return 1 }
+  REPLY=$d
+}
+
+_zsh_mise_activate() {
+  eval "$(mise activate zsh)"
+  add-zsh-hook -d precmd _mise_hook_precmd
+  _zsh_mise_project_root
+  typeset -g _zsh_mise_root=$REPLY
+
+  # mise's chpwd hook forks `mise hook-env` (~28ms here) on every cd, even
+  # outside a project. Run it only when the nearest project root changes, so
+  # `cd` within a project (or anywhere unrelated) stays free.
+  if (( $+functions[_mise_hook_chpwd] && ! $+functions[_zsh_mise_hook_chpwd_orig] )); then
+    functions[_zsh_mise_hook_chpwd_orig]=$functions[_mise_hook_chpwd]
+    _mise_hook_chpwd() {
+      local -i ret=$?
+      _zsh_mise_project_root
+      if [[ $REPLY != $_zsh_mise_root ]]; then
+        _zsh_mise_root=$REPLY
+        _zsh_mise_hook_chpwd_orig
+      fi
+      return $ret
+    }
+  fi
+}
+
 if (($+commands[mise])); then
-  zsh-defer -12p -c '. <(mise activate zsh --shims)'
+  if _zsh_mise_project_root; then
+    _zsh_mise_activate
+  else
+    zsh-defer -12p -c '_zsh_mise_activate'
+  fi
 fi
 
 # Cosmetic integrations. -12dmp: show errors (-1 -2), skip precmd/chpwd hooks

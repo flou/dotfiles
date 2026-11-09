@@ -13,9 +13,10 @@ trusted_config_paths = [
 bun = true
 
 [settings.python]
-# Venvs are activated by ~/.config/zsh/python-venv.sh's chpwd hook. With
-# `mise activate --shims` there is no mise hook, so this would not run anyway.
-uv_venv_auto = false
+# Activate the .venv of the uv project around the current directory. Requires
+# hook-based `mise activate` (shims alone do not apply it). "create|source"
+# matches the old `true` behaviour without exporting UV_PYTHON (deprecated).
+uv_venv_auto = "create|source"
 
 [settings.self_update]
 auto = true
