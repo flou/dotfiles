@@ -1,137 +1,17 @@
 # Get editor completions based on the config schema
 "$schema" = 'https://starship.rs/config-schema.json'
 
+# Only modules referenced here are evaluated. Anything not in this string is
+# never rendered, so it needs no `disabled = true` entry.
+#
+# add_newline = false because the OSC 133 A mark must start the prompt line;
+# there is deliberately no leading blank line between commands.
 add_newline = false
-format = "$username$hostname$localip$shlvl$directory$git_branch$helm$python$terraform$zig$nix_shell$aws$gcloud$direnv$kubernetes$sudo$cmd_duration$line_break$jobs$battery$status$shell$character"
-
-[singularity]
-disabled = true
-[nats]
-disabled = true
-[vcsh]
-disabled = true
-[fossil_branch]
-disabled = true
-[fossil_metrics]
-disabled = true
-[git_commit]
-disabled = true
-[git_state]
-disabled = true
-[git_metrics]
-disabled = true
-[hg_branch]
-disabled = true
-[pijul_channel]
-disabled = true
-[package]
-disabled = true
-[buf]
-disabled = true
-[cobol]
-disabled = true
-[daml]
-disabled = true
-[dart]
-disabled = true
-[dotnet]
-disabled = true
-[fennel]
-disabled = true
-[gradle]
-disabled = true
-[haskell]
-disabled = true
-[haxe]
-disabled = true
-[julia]
-disabled = true
-[kotlin]
-disabled = true
-[ocaml]
-disabled = true
-[odin]
-disabled = true
-[opa]
-disabled = true
-[perl]
-disabled = true
-[purescript]
-disabled = true
-[quarto]
-disabled = true
-[raku]
-disabled = true
-[rlang]
-disabled = true
-[red]
-disabled = true
-[scala]
-disabled = true
-[solidity]
-disabled = true
-[swift]
-disabled = true
-[typst]
-disabled = true
-[vlang]
-disabled = true
-[vagrant]
-disabled = true
-[guix_shell]
-disabled = true
-[conda]
-disabled = true
-[meson]
-disabled = true
-[spack]
-disabled = true
-[memory_usage]
-disabled = true
-[openstack]
-disabled = true
-[azure]
-disabled = true
-[crystal]
-disabled = true
-[status]
-disabled = true
-[container]
-disabled = true
-[os]
-disabled = true
-[php]
-disabled = true
-[ruby]
-disabled = true
-[rust]
-disabled = true
-[c]
-disabled = true
-[elixir]
-disabled = true
-[elm]
-disabled = true
-[java]
-disabled = true
-[lua]
-disabled = true
-[nim]
-disabled = true
-[nodejs]
-disabled = true
-[git_status]
-disabled = true
-[golang]
-disabled = true
-[docker_context]
-disabled = true
+format = "$username$hostname$localip$shlvl$directory$git_branch$helm$python$terraform$zig$nix_shell$aws$gcloud$direnv$kubernetes$sudo$cmd_duration$line_break$jobs$battery$shell$character"
 
 [directory]
 truncation_length = 0
-repo_root_style = "bold yellow"
 read_only = " 󰌾"
-truncate_to_repo = false
 
 [character]
 success_symbol = '[\$](green)'

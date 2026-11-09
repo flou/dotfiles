@@ -63,6 +63,9 @@ path=(
   $HOME/.cargo/bin
   $GOPATH/bin
   $HOME/.local/bin
+  # mise shims are directory-aware and work without the activate hook, so
+  # `zsh -c` and GUI-launched shells get the same tools as interactive ones.
+  $HOME/.local/share/mise/shims
   $REX_BIN_DIR
   '/Applications/Ghostty.app/Contents/MacOS'
   $HOMEBREW_REPOSITORY/opt/gnu-sed/libexec/gnubin

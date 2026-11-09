@@ -13,7 +13,9 @@ trusted_config_paths = [
 bun = true
 
 [settings.python]
-uv_venv_auto = true
+# Venvs are activated by ~/.config/zsh/python-venv.sh's chpwd hook. With
+# `mise activate --shims` there is no mise hook, so this would not run anyway.
+uv_venv_auto = false
 
 [settings.self_update]
 auto = true
