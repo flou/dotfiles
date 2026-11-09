@@ -4,8 +4,8 @@
 # Only modules referenced here are evaluated. Anything not in this string is
 # never rendered, so it needs no `disabled = true` entry.
 #
-# add_newline = false because the OSC 133 A mark must start the prompt line;
-# there is deliberately no leading blank line between commands.
+# add_newline = false: ~/.zshrc prepends the blank line to PROMPT, before the
+# OSC 133 A mark, so the mark still starts the prompt line (Ghostty aside).
 add_newline = false
 format = "$username$hostname$localip$shlvl$directory$git_branch$helm$python$terraform$zig$nix_shell$aws$gcloud$direnv$kubernetes$sudo$cmd_duration$line_break$jobs$battery$shell$character"
 

@@ -238,11 +238,15 @@ if (($+commands[starship])); then
 fi
 
 # starship replaces PROMPT, dropping the OSC 133 A/B marks. Put them back here,
-# once, for both starship and the fallback prompt above. The A mark belongs on
-# the prompt line itself, which is why starship.toml keeps add_newline = false
-# and no precmd hook prints a leading blank line.
+# once, for both starship and the fallback prompt above. The leading newline is
+# what gives the blank line between commands; putting it before the A mark keeps
+# the mark on the prompt line instead of on the empty line. In Ghostty its own
+# integration prepends its A to PS1, so there the mark lands on the blank line;
+# its precmd has to stay last, and a precmd `print` would make its D mark late.
 if (( ! $+_ghostty_state )); then
-  PROMPT=$'%{\e]133;A\a%}'"$PROMPT"$'%{\e]133;B\a%}'
+  PROMPT=$'\n%{\e]133;A\a%}'"$PROMPT"$'%{\e]133;B\a%}'
+else
+  PROMPT=$'\n'"$PROMPT"
 fi
 
 if (($+commands[direnv])); then
