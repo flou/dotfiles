@@ -1,18 +1,15 @@
 # vim: set filetype=sh tabstop=2 softtabstop=2 shiftwidth=2
-# Skip /etc/zprofile and /etc/zshrc: path_helper and the system prompt setup
-# are not needed, and skipping them saves a few ms per shell.
+# Skip /etc/zprofile and /etc/zshrc: path_helper and prompt setup cost a few ms.
 setopt no_global_rcs
 
-# /etc/zshrc used to set this.
 setopt COMBINING_CHARS
 
-# Ensure that a non-login, non-interactive shell has a defined environment.
+# Give a non-login, non-interactive shell a defined environment.
 if [[ ("$SHLVL" -eq 1 && ! -o LOGIN) && -s "${HOME}/.zprofile" ]]; then
   source "${HOME}/.zprofile"
 fi
 
-# fpath lives here, not in ~/.zprofile: every shell needs the same fpath or the
-# completion dump is rebuilt on every login/non-login switch.
+# Keep fpath here: login and non-login shells must share it and the compdump.
 typeset -gU fpath path cdpath
 fpath=(
   $HOME/.local/share/zsh/site-functions

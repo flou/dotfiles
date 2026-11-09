@@ -1,11 +1,8 @@
 # vim: set filetype=sh tabstop=2 softtabstop=2 shiftwidth=2
 
-# OSC 133 semantic prompt markers (FinalTerm shell integration):
-#   A = prompt start, B = user input start, C = command started, D = command done.
-# Terminals that understand them (Rex, Ghostty, iTerm2, Kitty, WezTerm, ...) can
-# jump between prompts/commands and track exit status. Ghostty injects the same
-# marks itself and needs to remain the last precmd hook, so only install ours
-# when its integration is not active.
+# OSC 133 marks: A prompt start, B input start, C command start, D command done.
+# Ghostty emits them itself and must keep its precmd hook last, so only install
+# ours when it is not active.
 typeset -gi _osc133_status=0
 autoload -Uz add-zsh-hook
 
@@ -18,11 +15,9 @@ if (( ! $+_ghostty_state )); then
   }
 
   _osc133_precmd() {
-    # Capture $? before anything else: later precmd hooks (starship) read it.
     local -i exit_code=$?
     _osc133_status=$exit_code
-    # Don't emit anything when precmd is invoked from zle (prompt refresh), or
-    # we would close a command that is still running.
+    # Not during a zle refresh: the command is still running.
     if zle; then
       return $exit_code
     fi
@@ -36,9 +31,8 @@ if (( ! $+_ghostty_state )); then
   add-zsh-hook preexec _osc133_preexec
   add-zsh-hook precmd _osc133_precmd
 else
-  # Ghostty writes the OSC 133 marks itself, but starship's precmd clobbers $?
-  # before _ghostty_precmd (which must stay last). Remember the status here and
-  # put it back with _osc133_restore_precmd at the end of this file.
+  # Ghostty owns the marks, but starship clobbers $? before _ghostty_precmd
+  # (which must stay last). Capture it here, restore it at the end of the file.
   _osc133_capture_precmd() {
     local -i ret=$?
     _osc133_status=$ret
@@ -47,49 +41,44 @@ else
   add-zsh-hook precmd _osc133_capture_precmd
 fi
 
-# Prompt used until starship replaces it below, and the fallback when starship
-# is not installed. The OSC 133 A/B marks are added once, after starship runs.
+# Fallback prompt until starship replaces it; the A/B marks are added below.
 PROMPT='%F{yellow}%~%f '
 
 setopt autocd
 setopt extendedglob
-setopt bang_hist               # Treat the '!' character specially during expansion.
-setopt extended_history        # Write the history file in the ':start:elapsed;command' format.
-setopt hist_expire_dups_first  # Expire a duplicate event first when trimming history.
-setopt hist_find_no_dups       # Do not display a previously found event.
-setopt hist_ignore_all_dups    # Delete an old recorded event if a new event is a duplicate.
-setopt hist_ignore_dups        # Do not record an event that was just recorded again.
-setopt hist_ignore_space       # Do not record an event starting with a space.
-setopt hist_reduce_blanks      # Remove extra blanks from commands added to the history list.
-setopt hist_save_no_dups       # Do not write a duplicate event to the history file.
-setopt hist_verify             # Do not execute immediately upon history expansion.
-setopt share_history           # Share history between sessions (implies inc_append_history).
-setopt NO_hist_beep            # Don't beep when accessing non-existent history.
-setopt hist_fcntl_lock         # /etc/zshrc set this; keep concurrent shells safe.
+setopt bang_hist
+setopt extended_history
+setopt hist_expire_dups_first
+setopt hist_find_no_dups
+setopt hist_ignore_all_dups
+setopt hist_ignore_dups
+setopt hist_ignore_space
+setopt hist_reduce_blanks
+setopt hist_save_no_dups
+setopt hist_verify
+setopt share_history
+setopt NO_hist_beep
+setopt hist_fcntl_lock
 
-# /etc/zshrc used to set this. Needed because widgets.sh uses the emacs keymap.
 bindkey -e
 KEYTIMEOUT=10 # 100ms; 1 (10ms) is snappier but splits Alt chords over SSH/tmux
 
 HISTFILE="${XDG_DATA_HOME}/zsh/history"
 [[ -d "${HISTFILE:h}" ]] || mkdir -p "${HISTFILE:h}"
-# With share_history every shell reads this file at startup, so a very large
-# HISTSIZE directly costs prompt latency. 100k is ~months of use.
+# share_history reads this on every startup; 100k is ~months of use.
 HISTSIZE=100000
 SAVEHIST=100000
 HISTORY_IGNORE="(ls|l|cd|pwd|exit|cd ..|..)"
 
-# Load antidote and ZSH plugins
 zsh_plugins="${XDG_CONFIG_HOME}/zsh/zsh_plugins"
 fpath=("${HOME}/.antidote/functions" $fpath)
 autoload -Uz antidote
 
-# zephyr already knows how to cache compinit; enable it (20h TTL) instead of
-# running a full fpath scan on every shell.
+# zephyr caches compinit; avoid a full fpath scan per shell.
 zstyle ':zephyr:plugin:completion' use-cache yes
 
-# Generate a new static file whenever .zsh_plugins.txt is updated. Write to a
-# temp file first so a failed antidote run cannot truncate the existing bundle.
+# Rebuild the static bundle when .zsh_plugins.txt changes; the temp file keeps
+# a failed run from truncating the existing one.
 if [[ ! "${zsh_plugins}.zsh" -nt "${zsh_plugins}.txt" ]]; then
   tmp="${zsh_plugins}.zsh.tmp.$$"
   if antidote bundle < "${zsh_plugins}.txt" >| "${tmp}"; then
@@ -100,10 +89,8 @@ if [[ ! "${zsh_plugins}.zsh" -nt "${zsh_plugins}.txt" ]]; then
 fi
 source "${zsh_plugins}.zsh"
 
-# Aliases, widgets, work helpers, eza aliases and the venv hook are cheap and
-# needed by the first command (and by `zsh -i -c` invocations, where zsh-defer
-# never runs): load them eagerly. zsh-defer comes from the antidote bundle
-# sourced above.
+# Load eagerly: the first command needs these, and zsh-defer never runs under
+# `zsh -i -c`.
 source "${XDG_CONFIG_HOME}/zsh/aliases.sh"
 if [[ -r "${XDG_CONFIG_HOME}/zsh/work-aliases.sh" ]]; then
   source "${XDG_CONFIG_HOME}/zsh/work-aliases.sh"
@@ -112,24 +99,17 @@ source "${XDG_CONFIG_HOME}/zsh/widgets.sh"
 if (($+commands[eza])); then
   source "${XDG_CONFIG_HOME}/zsh/eza.sh"
 fi
-# Disabled while testing mise's python.uv_venv_auto (see
-# ~/.config/mise/config.toml). Re-enable this block and set uv_venv_auto = false
-# to switch back to the chpwd-based hook.
+# Disabled while testing mise's uv_venv_auto; re-enable with uv_venv_auto = false.
 # if [[ -r "${XDG_CONFIG_HOME}/zsh/python-venv.sh" ]]; then
 #   source "${XDG_CONFIG_HOME}/zsh/python-venv.sh"
 # fi
 
-# mise's shims (in ~/.zprofile) cover tool paths, but python.uv_venv_auto and
-# per-project [env] only apply in a hook-activated shell, so activate for real.
-# mise's precmd hook forks `mise hook-env` (~19ms here) on every prompt, so drop
-# it; the chpwd hook and the initial `_mise_hook --force` in the activate script
-# cover dir changes and shell start.
-#
-# Activation costs ~40ms (fork for `mise activate`, fork for its initial hook,
-# plus venv detection), so only pay it up front when the shell starts inside a
-# project; a deferred activation would otherwise race the first command.
+# uv_venv_auto needs hook-based activation, but mise's precmd hook forks
+# `mise hook-env` (~19ms) on every prompt, so drop it and keep only the guarded
+# chpwd hook. Activate eagerly in a project dir (deferred would race the first
+# command), otherwise defer: activation costs ~40ms.
 _zsh_mise_project_root() {
-  # REPLY = nearest directory with a uv.lock/mise.toml, empty if none.
+  # REPLY = nearest dir with a uv.lock/mise.toml, empty if none.
   local d=$PWD
   while [[ $d != / && ! -e $d/uv.lock && ! -e $d/mise.toml && ! -e $d/.mise.toml ]]; do
     d=${d:h}
@@ -144,9 +124,8 @@ _zsh_mise_activate() {
   _zsh_mise_project_root
   typeset -g _zsh_mise_root=$REPLY
 
-  # mise's chpwd hook forks `mise hook-env` (~28ms here) on every cd, even
-  # outside a project. Run it only when the nearest project root changes, so
-  # `cd` within a project (or anywhere unrelated) stays free.
+  # Only fork when the nearest project root changes; otherwise every `cd` pays
+  # the ~28ms `mise hook-env`.
   if (( $+functions[_mise_hook_chpwd] && ! $+functions[_zsh_mise_hook_chpwd_orig] )); then
     functions[_zsh_mise_hook_chpwd_orig]=$functions[_mise_hook_chpwd]
     _mise_hook_chpwd() {
@@ -169,10 +148,8 @@ if (($+commands[mise])); then
   fi
 fi
 
-# Cosmetic integrations. -12dmp: show errors (-1 -2), skip precmd/chpwd hooks
-# after each task (-m -d), and don't redraw the prompt (-p) -- every redraw
-# re-runs starship. -t delays this task and everything after it without
-# blocking ZLE, so put it on the first cosmetic task only.
+# -12: show errors. -d -m: no chpwd/precmd hooks after the task. -p: no prompt
+# redraw (it would fork starship again). -t: delay without blocking zle.
 if (($+commands[fzf])); then
   zsh-defer -12dmp -t 0.05 -c '. <(fzf --zsh)'
   zsh-defer -12dmp -c '. "${XDG_CONFIG_HOME}/fzf/ghq.sh"'
@@ -186,28 +163,21 @@ fi
 # zle     -N              edit-command-line
 # bindkey -M emacs "^X^E" edit-command-line
 
-# Cache a static init script, keyed by the resolved binary path and its mtime.
-# Returns non-zero when the cache could not be (re)generated, so the caller can
-# fall back to running the command directly.
-#
-# The header records which binary produced the cache. Comparing the path as well
-# as the mtime matters for nix-installed binaries, whose symlink target has an
-# epoch mtime (so `-nt` never fires) but whose store path changes on upgrade.
+# Cache a static init script, keyed by binary path and mtime. The path matters
+# for nix binaries: the store path changes on upgrade while the symlink target's
+# epoch mtime means `-nt` never fires. Returns non-zero if generation fails.
 _zsh_cache_init() {
   local bin=$commands[$1] file=$2 sig
   shift 2
   [[ -s $file ]] && read -r sig < $file
   if [[ $sig != "# $bin" || $bin -nt $file ]]; then
     mkdir -p "$file:h"
-    # pipefail: a failing binary must not leave a truncated cache behind just
-    # because sed exited successfully. Scope it to the generation pipeline and
-    # not with `local_options`: the sourced file must still be able to set
-    # shell options (starship's init runs `setopt promptsubst`).
+    # Scope pipefail to the pipeline, not with local_options: the sourced file
+    # must still be able to set options (starship runs `setopt promptsubst`).
     local -i had_pipefail=$options[pipefail]
     setopt pipefail
     {
-      # starship's init forks `starship prompt --continuation` for PROMPT2; drop
-      # that line (PROMPT2 is hardcoded below) so caching really avoids the fork.
+      # Drop starship's PROMPT2 fork; PROMPT2 is hardcoded below.
       if { print -r -- "# $bin"; "$bin" "$@" | sed '/^PROMPT2=/d' } >| "$file.tmp.$$" \
         && mv "$file.tmp.$$" "$file"; then
         :
@@ -223,26 +193,19 @@ _zsh_cache_init() {
 }
 
 if (($+commands[starship])); then
-  # PROMPT must exist before the first prompt, so starship has to load eagerly.
-  # `starship init zsh` is static apart from the session key, which it generates
-  # at source time, so cache it: a ~10ms starship fork collapses into one file
-  # read. _zsh_cache_init strips the PROMPT2 fork for us.
+  # PROMPT must exist before the first prompt, so load eagerly; the init output
+  # is static apart from the session key, so cache it.
   if ! _zsh_cache_init starship "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/starship.zsh" init zsh; then
     eval "$($commands[starship] init zsh)"
   fi
 
-  # Hardcode the continuation prompt (starship's is a fixed grey bullet) instead
-  # of forking `starship prompt --continuation`. Caching it keyed on the binary
-  # would also go stale whenever starship.toml changes.
+  # Hardcode the fixed continuation prompt instead of forking on startup.
   PROMPT2='%F{240}∙%f '
 fi
 
-# starship replaces PROMPT, dropping the OSC 133 A/B marks. Put them back here,
-# once, for both starship and the fallback prompt above. The leading newline is
-# what gives the blank line between commands; putting it before the A mark keeps
-# the mark on the prompt line instead of on the empty line. In Ghostty its own
-# integration prepends its A to PS1, so there the mark lands on the blank line;
-# its precmd has to stay last, and a precmd `print` would make its D mark late.
+# starship's PROMPT drops our A/B marks; re-add them. The newline comes before
+# A so the mark starts the prompt line. In Ghostty its own A lands on the blank
+# line instead, but its precmd hook must stay last.
 if (( ! $+_ghostty_state )); then
   PROMPT=$'\n%{\e]133;A\a%}'"$PROMPT"$'%{\e]133;B\a%}'
 else
@@ -250,23 +213,17 @@ else
 fi
 
 if (($+commands[direnv])); then
-  # The hook is static (it only embeds the direnv path), so cache it and load it
-  # eagerly: the first command then always sees the right environment. direnv
-  # itself still runs from precmd/chpwd, exactly as designed.
+  # Static hook: cache it and load eagerly so the first command sees the env.
   if ! _zsh_cache_init direnv "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/direnv.zsh" hook zsh; then
     eval "$($commands[direnv] hook zsh)"
   fi
 
-  # Fast path: `direnv export zsh` costs ~10ms per prompt even when there is no
-  # .envrc. Skip the fork when nothing is loaded and no .envrc exists above us;
-  # DIRENV_DIFF is set whenever direnv has an environment to unload, so leaving
-  # a direnv directory still works.
+  # Skip the ~10ms `direnv export` fork when no .envrc applies and nothing is
+  # loaded; DIRENV_DIFF covers leaving a direnv directory.
   if (( $+functions[_direnv_hook] && ! $+functions[_direnv_hook_orig] )); then
     functions[_direnv_hook_orig]=$functions[_direnv_hook]
     _direnv_hook() {
-      # `direnv hook zsh` prepends this hook to precmd_functions, so it runs
-      # before _osc133_precmd and starship. Preserve $? or both see this hook's
-      # status instead of the command that just ran.
+      # Preserve $? for _osc133_precmd and starship.
       local -i ret=$?
       setopt localoptions localtraps
       [[ -o interactive && $ZSH_SUBSHELL -eq 0 ]] || return $ret
@@ -285,8 +242,7 @@ if (($+commands[zsh-patina])); then
   zsh-defer -12dmp -c '. <(zsh-patina activate)'
 fi
 
-# zsh-autosuggestions rebinds widgets on every prompt and leaves $? set to its
-# own status. Preserve the command's status for starship, which runs after it.
+# zsh-autosuggestions leaves its own status; preserve the command's for starship.
 if (( $+functions[_zsh_autosuggest_start] && ! $+functions[_zsh_autosuggest_start_orig] )); then
   functions[_zsh_autosuggest_start_orig]=$functions[_zsh_autosuggest_start]
   _zsh_autosuggest_start() {
@@ -296,8 +252,7 @@ if (( $+functions[_zsh_autosuggest_start] && ! $+functions[_zsh_autosuggest_star
   }
 fi
 
-# starship's precmd does not preserve $? either. In Ghostty, _ghostty_precmd
-# must be the last precmd hook, so hand the status back to it here.
+# starship's precmd also loses $?; hand it back to Ghostty, which runs last.
 if (( $+_ghostty_state )); then
   _osc133_restore_precmd() { return $_osc133_status }
   add-zsh-hook precmd _osc133_restore_precmd

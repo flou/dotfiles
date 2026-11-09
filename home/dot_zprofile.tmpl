@@ -35,10 +35,8 @@ export SHELL_SESSIONS_DISABLE=1 # Make Apple Terminal behave.
 
 export REX_BIN_DIR='/Applications/Rex Beta.app/Contents/Helpers/Rex Server.rex/Contents/MacOS'
 
-# Python: Don't write .pyc files
 export PYTHONDONTWRITEBYTECODE=1
 
-# FZF options
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git --exclude .DS_Store --strip-cwd-prefix'
 export FZF_DEFAULT_OPTS="--bind alt-up:preview-page-up --bind alt-down:preview-page-down --bind 'ctrl-o:execute-silent(code {})+abort'"
 export FZF_CTRL_T_COMMAND='fd --type f --type d --hidden --follow --exclude .git --exclude .DS_Store --strip-cwd-prefix'
@@ -54,17 +52,15 @@ export CLOUDSDK_PYTHON="${XDG_DATA_HOME}/mise/installs/python/latest/bin/python"
   export SSH_AUTH_SOCK="${HOME}/.ssh/proton-pass-agent.sock"
 {{- end }}
 
-# typeset and export args:
-# -T: bind with a shell path variable
-# -U: ensure that entries are unique
-# (fpath is set in ~/.zshenv so login and non-login shells agree.)
+# typeset -T binds a shell path var, -U keeps entries unique. fpath lives in
+# ~/.zshenv so login and non-login shells agree.
 
 path=(
   $HOME/.cargo/bin
   $GOPATH/bin
   $HOME/.local/bin
-  # mise shims are directory-aware and work without the activate hook, so
-  # `zsh -c` and GUI-launched shells get the same tools as interactive ones.
+  # Directory-aware, and they work without the activate hook, so `zsh -c` and
+  # GUI-launched shells resolve the same tools.
   $HOME/.local/share/mise/shims
   $REX_BIN_DIR
   '/Applications/Ghostty.app/Contents/MacOS'

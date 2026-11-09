@@ -12,9 +12,8 @@ function venv() {
 }
 
 function _python-workon-cwd {
-  # Walk up from the current directory looking for a .venv, stopping at the
-  # repository root (a .git directory or file, which covers worktrees and
-  # submodules). This avoids forking `git rev-parse` on every cd.
+  # Walk up to the repo root (.git dir or file, covering worktrees), stopping at
+  # a .venv; avoids forking `git rev-parse` on every cd.
   local PROJECT_ROOT="$PWD:A"
   while [[ "$PROJECT_ROOT" != "/" && ! -e "$PROJECT_ROOT/.venv" && ! -e "$PROJECT_ROOT/.git" ]]; do
     PROJECT_ROOT="$PROJECT_ROOT:h"
@@ -23,7 +22,7 @@ function _python-workon-cwd {
     PROJECT_ROOT="."
   fi
 
-  # Check for virtualenv name override.
+  # .venv may be a name file or a directory.
   local ENV_NAME=""
   if [[ -f "$PROJECT_ROOT/.venv" ]]; then
     ENV_NAME="$(<$PROJECT_ROOT/.venv)"
@@ -34,14 +33,12 @@ function _python-workon-cwd {
   fi
 
   if [[ -n $CD_VIRTUAL_ENV && "$ENV_NAME" != "$CD_VIRTUAL_ENV" ]]; then
-    # We've just left the repo, deactivate the environment.
-    # Note: this only happens if the virtualenv was activated automatically.
+    # Only auto-activated environments are deactivated here.
     (( $+functions[deactivate] )) && deactivate
     unset CD_VIRTUAL_ENV
   fi
 
   if [[ $ENV_NAME != "" ]]; then
-    # Activate the environment only if it is not already active.
     if [[ "$VIRTUAL_ENV" != "$WORKON_HOME/$ENV_NAME" ]]; then
       if [[ -n "$WORKON_HOME" && -e "$WORKON_HOME/$ENV_NAME/bin/activate" ]]; then
         workon "$ENV_NAME" && export CD_VIRTUAL_ENV="$ENV_NAME"
@@ -52,6 +49,5 @@ function _python-workon-cwd {
   fi
 }
 
-# Load auto workon cwd hook.
 autoload -Uz add-zsh-hook
 add-zsh-hook chpwd _python-workon-cwd
