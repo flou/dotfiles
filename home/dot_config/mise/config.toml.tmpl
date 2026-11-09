@@ -30,22 +30,7 @@ uv = "latest"
 "pypi:pxpx" = "latest"
 bun = "latest"
 opencode = { version = "latest", allow_builds = ["@opencode/cli"] }
-
-[bootstrap.services.mise-history]
-builtin = "history-watch"
-
-[dotfiles]
-"~/.config/ghostty/config.ghostty" = { mode = "track" }
-"~/.config/lazygit/config.yml" = { mode = "track" }
-"~/.zprofile" = { mode = "track" }
-"~/.zshenv" = { mode = "track" }
-"~/.zshrc" = { mode = "track" }
-
-[history]
-exclude = [".DS_Store"]
-
-
-{{- if .work }}
+{{ if .work }}
 "cargo:proc-cli" = "latest"
 "go:github.com/rothgar/k" = "latest"
 argocd = "latest"
@@ -66,4 +51,15 @@ tflint = "latest"
 vault = "1.18.2"
 viddy = "latest"
 yq = "latest"
-{{- end }}
+{{ end }}
+[bootstrap.services.mise-history]
+builtin = "history-watch"
+
+[dotfiles]
+"~/.config/lazygit/config.yml" = { mode = "track" }
+"~/.zprofile" = { mode = "track" }
+"~/.zshenv" = { mode = "track" }
+"~/.zshrc" = { mode = "track" }
+
+[history]
+exclude = [".DS_Store"]
