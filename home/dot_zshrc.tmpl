@@ -96,7 +96,7 @@ if [[ -r "${XDG_CONFIG_HOME}/zsh/work-aliases.sh" ]]; then
   source "${XDG_CONFIG_HOME}/zsh/work-aliases.sh"
 fi
 source "${XDG_CONFIG_HOME}/zsh/widgets.sh"
-if (($+commands[eza])); then
+if (($+commands[eza])) && [[ -r "${XDG_CONFIG_HOME}/zsh/eza.sh" ]]; then
   source "${XDG_CONFIG_HOME}/zsh/eza.sh"
 fi
 # Disabled while testing mise's uv_venv_auto; re-enable with uv_venv_auto = false.
