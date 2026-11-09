@@ -14,7 +14,7 @@ Then pull the `chezmoi` repository:
 ```bash
 mkdir -p ~/workspace/github.com/flou
 chezmoi init flou --source "${HOME}/workspace/github.com/flou/dotfiles"
-ln -sv "${HOME}/workspace/github.com/flou/dotfiles" "${HOME}/.local/share/chezmoi"
+ln -sfn "${HOME}/workspace/github.com/flou/dotfiles" "${HOME}/.local/share/chezmoi"
 chezmoi apply
 ```
 
@@ -26,7 +26,7 @@ Install `mise` plugins
 mise install
 ```
 
-### NixOS
+### nix-darwin/macOS
 
 Install Nix
 
@@ -35,7 +35,7 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install
 
 cd "${HOME}/.config/nix-darwin"
 nix flake update
-# Fist time
+# First time
 sudo -i nix run -- nix-darwin switch --flake "${HOME}/.config/nix-darwin"
 
 # Subsequent times
