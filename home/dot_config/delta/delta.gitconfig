@@ -4,5 +4,4 @@
   file-modified-label = "~"
   hyperlinks = true
   hyperlinks-file-link-format = "zed://file/{path}:{line}"
-  navigate = true
   zero-style = dim syntax

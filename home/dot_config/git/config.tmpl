@@ -12,6 +12,7 @@
   allowedSignersFile = {{ .chezmoi.homeDir }}/.ssh/allowed_signers
 [commit]
   gpgsign = true
+  verbose = true
 [github]
   user = flou
 [init]
@@ -23,8 +24,6 @@
   whitespace = -trailing
 [credential]
   helper = osxkeychain
-[commit]
-  verbose = true
 [color "status"]
   added      = yellow
   changed    = green
