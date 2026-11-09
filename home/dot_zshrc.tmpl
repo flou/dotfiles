@@ -194,23 +194,30 @@ fi
 # as the mtime matters for nix-installed binaries, whose symlink target has an
 # epoch mtime (so `-nt` never fires) but whose store path changes on upgrade.
 _zsh_cache_init() {
-  # pipefail: a failing binary must not leave a truncated cache behind just
-  # because sed exited successfully.
-  setopt local_options pipefail
   local bin=$commands[$1] file=$2 sig
   shift 2
   [[ -s $file ]] && read -r sig < $file
   if [[ $sig != "# $bin" || $bin -nt $file ]]; then
     mkdir -p "$file:h"
-    # starship's init forks `starship prompt --continuation` for PROMPT2; drop
-    # that line (PROMPT2 is hardcoded below) so caching really avoids the fork.
-    if { print -r -- "# $bin"; "$bin" "$@" | sed '/^PROMPT2=/d' } >| "$file.tmp.$$" \
-      && mv "$file.tmp.$$" "$file"; then
-      :
-    else
-      rm -f "$file.tmp.$$"
-      return 1
-    fi
+    # pipefail: a failing binary must not leave a truncated cache behind just
+    # because sed exited successfully. Scope it to the generation pipeline and
+    # not with `local_options`: the sourced file must still be able to set
+    # shell options (starship's init runs `setopt promptsubst`).
+    local -i had_pipefail=$options[pipefail]
+    setopt pipefail
+    {
+      # starship's init forks `starship prompt --continuation` for PROMPT2; drop
+      # that line (PROMPT2 is hardcoded below) so caching really avoids the fork.
+      if { print -r -- "# $bin"; "$bin" "$@" | sed '/^PROMPT2=/d' } >| "$file.tmp.$$" \
+        && mv "$file.tmp.$$" "$file"; then
+        :
+      else
+        rm -f "$file.tmp.$$"
+        return 1
+      fi
+    } always {
+      (( had_pipefail )) || unsetopt pipefail
+    }
   fi
   source "$file"
 }
