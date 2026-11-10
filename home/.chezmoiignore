@@ -15,6 +15,6 @@ workspace/github.com/flou/nixos-config
 {{- else }}
 .config/zed/settings.json
 {{- end }}
-{{- if lookPath "pass-cli" }}
+{{- if or .work (not (lookPath "pass-cli")) }}
 Library/LaunchAgents/com.proton.pass-cli.ssh-agent.plist
 {{- end }}
