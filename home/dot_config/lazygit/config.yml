@@ -6,10 +6,10 @@ promptToReturnFromSubprocess: false
 quitOnTopLevelReturn: false
 gui:
   border: rounded
+  commitGraphStyle: detailed
   commitLength:
     show: true
   mouseEvents: true
-  nerdFontsVersion: "3"
   scrollHeight: 4 # how many lines you scroll by
   scrollPastBottom: false # enable scrolling past the bottom
   showBottomLine: false
