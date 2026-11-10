@@ -28,3 +28,10 @@ rex.bind("cmd+enter", ignore)
 
 -- Pick a ghq repository in a floating window and open a session there.
 require("plugins.ghq")
+
+-- Start a Claude Code session
+local claude_plugin = io.open(os.getenv("HOME") .. "/.config/rex/plugins/claude/init.lua")
+if claude_plugin then
+  claude_plugin:close()
+  require("plugins.claude")
+end
