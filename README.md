@@ -1,12 +1,14 @@
 # Setup
 
-Install Homebrew:
+Install Homebrew and mise:
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Install basic Homebrew packages to setup all the rest
 brew install git chezmoi
+
+curl -fsSL https://mise.run | sh
 ```
 
 Then pull the `chezmoi` repository:
@@ -16,6 +18,15 @@ mkdir -p ~/workspace/github.com/flou
 chezmoi init flou --source "${HOME}/workspace/github.com/flou/dotfiles"
 ln -sfn "${HOME}/workspace/github.com/flou/dotfiles" "${HOME}/.local/share/chezmoi"
 chezmoi apply
+```
+
+## Development
+
+After `mise install`, render the templates and run the local checks before
+committing:
+
+```bash
+mise run check
 ```
 
 ## mise

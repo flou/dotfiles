@@ -1,0 +1,14 @@
+[tasks.diff]
+description = "Show pending changes"
+run = "chezmoi diff"
+
+[tasks.apply]
+description = "Apply the dotfiles to this machine"
+run = "chezmoi apply"
+
+[tasks.check]
+description = "Render templates and run the local checks"
+run = "./scripts/check.sh"
+
+[tools]
+shellcheck = "latest"
