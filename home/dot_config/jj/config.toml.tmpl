@@ -6,7 +6,7 @@ email = {{ .my.email | quote }}
 [ui]
 paginate = "never"
 default-command = "log"
-diff-formatter = "git"
+diff-formatter = ":git"
 diff-editor = ":builtin"
 
 [aliases]
@@ -29,6 +29,7 @@ tug = ["bookmark", "move", "--from", "heads(::@- & bookmarks())", "--to", "@-"]
 mr = ['git', 'push', '-c', '@-', '-o', 'merge_request.create']
 draft = ['git', 'push', '-c', '@-', '-o', 'merge_request.create', '-o', 'merge_request.draft']
 start = ["util", "exec", "--", "sh", "-c", "jj git fetch && jj new 'trunk()'"]
+plan = ["new", "--no-edit", "heads(@::)", "-m"]
 
 [colors]
 "commit_id prefix" = { bold = true }
@@ -64,6 +65,22 @@ concat(
 [template-aliases]
 "format_timestamp(timestamp)" = "timestamp.ago()"
 'format_short_id(id)' = 'id.shortest(5)'
+empty_commit_marker = "label('empty', '▢')"
+simple_log = """
+  separate(" ",
+    pad_end(
+      4,
+      separate("/",
+        self.change_id().shortest(),
+        if(self.divergent() || self.hidden(), self.change_offset())
+      )
+    ),
+    if(self.immutable(), "🔒", "  ") ++ " ",
+    if(self.empty(), empty_commit_marker),
+    if(self.description(), self.description().first_line(), if(self.empty(), '', label('no_description', '←'))),
+    self.bookmarks()
+  )
+"""
 
 [revsets]
 log = "present(@) | ancestors(immutable_heads().., 5) | present(trunk())"
@@ -71,7 +88,7 @@ log = "present(@) | ancestors(immutable_heads().., 5) | present(trunk())"
 [revset-aliases]
 trunk = "main@origin"
 
-{{- if .work }}
+{{ if .work }}
 [[--scope]]
 --when.repositories = ["~/workspace/{{ .my.work_git_forge }}"]
 [--scope.user]
@@ -83,7 +100,7 @@ behavior = "own"
 backend = "ssh"
 backends.ssh.program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 backends.ssh.allowed-signers = "{{ .chezmoi.homeDir }}/.ssh/allowed_signers"
-key = {{ (onepasswordDetailsFields "y36tqmojyxoqugz6gwyqxpmwbm").public_key.value | quote }}
+key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJwd5oiB+wCRkRPyFVHRya4FHU4jfXBPGfBgKgcY4PtJ"
 {{- end }}
 
 [git]
