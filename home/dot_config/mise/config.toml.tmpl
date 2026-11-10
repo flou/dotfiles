@@ -1,8 +1,8 @@
 [settings]
 experimental = true
+minimum_release_age = "0s"
 legacy_version_file = false
 disable_backends = ["asdf"]
-minimum_release_age = "0s"
 {{- if .work }}
 trusted_config_paths = [
   "{{ .chezmoi.homeDir }}/workspace/{{ .my.work_git_forge }}/",
@@ -13,6 +13,7 @@ trusted_config_paths = [
 bun = true
 
 [settings.python]
+compile = false
 uv_venv_auto = "create|source"
 
 [settings.self_update]
@@ -22,36 +23,48 @@ auto = true
 aube = "latest"
 cargo-binstall = "latest"
 go = "latest"
-just = "latest"
 node = "latest"
 python = "latest"
 usage = "latest"
 uv = "latest"
 "pypi:pxpx" = "latest"
 bun = "latest"
-opencode = { version = "latest", allow_builds = ["@opencode/cli"] }
-{{ if .work }}
+{{- if .work }}
+"cargo:abtop" = "latest"
 "cargo:proc-cli" = "latest"
+"go:github.com/jackchuka/dutix/cmd/dutix" = "latest"
 "go:github.com/rothgar/k" = "latest"
+"npm:@tsuga/cli" = "latest"
+"pypi:azure-cli" = "latest"
+"pypi:commitizen" = "latest"
+"pypi:keyring" = "latest"
 argocd = "latest"
 aws-cli = "latest"
 claude-code = "latest"
-gcloud = "584.0.0"
+crossplane = "latest"
+gcloud = "592.0.0"
 hadolint = "latest"
 helm = "latest"
 helm-diff = "latest"
+hunk = "latest"
 jq = "latest"
 k9s = "latest"
 kubectl = "latest"
 kubectx = "latest"
+lua-language-server = "latest"
+pitchfork = "latest"
 prek = "latest"
+rtk = "latest"
 shellcheck = "latest"
 stern = "latest"
 tflint = "latest"
-vault = "1.18.2"
+vault = "latest"
 viddy = "latest"
 yq = "latest"
-{{ end }}
+{{- else }}
+opencode = { version = "latest", allow_builds = ["@opencode/cli"] }
+{{- end }}
+
 [bootstrap.services.mise-history]
 builtin = "history-watch"
 
