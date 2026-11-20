@@ -1,5 +1,5 @@
 README.md
-
+workspace/github.com/flou/nixos-config
 {{- if not .work }}
 .aws
 .config/gcloud
@@ -12,10 +12,6 @@ README.md
 .ssh/config.work
 .vault
 Library/Application Support/k9s
-workspace/github.com/flou/nixos-config
 {{- else }}
 .config/zed/settings.json
-{{- end }}
-{{- if or .work (not (lookPath "pass-cli")) }}
-Library/LaunchAgents/com.proton.pass-cli.ssh-agent.plist
 {{- end }}
