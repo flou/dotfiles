@@ -58,6 +58,11 @@ path=(
   # Directory-aware, and they work without the activate hook, so `zsh -c` and
   # GUI-launched shells resolve the same tools.
   $HOME/.local/share/mise/shims
+  # nix-darwin: ahead of Homebrew and /usr/local (e.g. OrbStack's kubectl), and
+  # where inactive mise shims fall through to.
+  /etc/profiles/per-user/$USER/bin
+  /run/current-system/sw/bin
+  /nix/var/nix/profiles/default/bin
   $REX_BIN_DIR
   '/Applications/Ghostty.app/Contents/MacOS'
   $HOMEBREW_REPOSITORY/opt/gnu-sed/libexec/gnubin
